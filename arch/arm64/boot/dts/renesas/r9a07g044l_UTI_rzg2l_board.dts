@@ -1,0 +1,18 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+/*
+ * Device Tree Source for the RZ/G2L SMARC EVK board
+ *
+ * Copyright (C) 2021 Renesas Electronics Corp.
+ */
+
+/dts-v1/;
+#include "r9a07g044_UTI.dtsi"
+#include "rzg2l-UTI-som.dtsi"
+#include "rzg2l-UTI-pinfunction.dtsi"
+#include "rz-UTI-carrier-common.dtsi"
+#include "rzg2l-UTI-Carrier.dtsi"
+
+/ {
+	model = "Ultratec 2400i next Gen prototype based on r9a07g044l2";
+	compatible = "renesas,smarc-evk", "renesas,r9a07g044l2", "renesas,r9a07g044";
+};
