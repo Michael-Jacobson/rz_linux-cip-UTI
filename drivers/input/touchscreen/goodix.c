@@ -183,18 +183,10 @@ static const unsigned long goodix_irq_flags[] = {
 static const struct dmi_system_id nine_bytes_report[] = {
 #if defined(CONFIG_DMI) && defined(CONFIG_X86)
 	{
-		/* Lenovo Yoga Book X90F / X90L */
+		.ident = "Lenovo YogaBook",
+		/* YB1-X91L/F and YB1-X90L/F */
 		.matches = {
-			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
-			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "CHERRYVIEW D1 PLATFORM"),
-			DMI_EXACT_MATCH(DMI_PRODUCT_VERSION, "YETI-11"),
-		}
-	},
-	{
-		/* Lenovo Yoga Book X91F / X91L */
-		.matches = {
-			/* Non exact match to match F + L versions */
-			DMI_MATCH(DMI_PRODUCT_NAME, "Lenovo YB1-X91"),
+			DMI_MATCH(DMI_PRODUCT_NAME, "Lenovo YB1-X9")
 		}
 	},
 #endif
@@ -919,7 +911,7 @@ retry_get_irq_gpio:
 	default:
 		if (ts->gpiod_int && ts->gpiod_rst) {
 			ts->reset_controller_at_probe = true;
-			ts->load_cfg_from_disk = true;
+			ts->load_cfg_from_disk = false;
 			ts->irq_pin_access_method = IRQ_PIN_ACCESS_GPIO;
 		}
 	}
@@ -1175,6 +1167,8 @@ static int goodix_ts_probe(struct i2c_client *client,
 {
 	struct goodix_ts_data *ts;
 	int error;
+	u32 mutex_reg;
+	union i2c_smbus_data smbusdata;
 
 	dev_dbg(&client->dev, "I2C Address: 0x%02x\n", client->addr);
 
@@ -1191,6 +1185,18 @@ static int goodix_ts_probe(struct i2c_client *client,
 	i2c_set_clientdata(client, ts);
 	init_completion(&ts->firmware_loading_complete);
 	ts->contact_size = GOODIX_CONTACT_SIZE;
+
+	if (of_property_read_bool(client->dev.of_node, "is-mutex")) {
+		if(!of_property_read_u32(client->dev.of_node, "mutex-reg", &mutex_reg)) {
+			error = i2c_smbus_xfer(client->adapter, mutex_reg, client->flags,
+						I2C_SMBUS_READ, 0,
+						I2C_SMBUS_BYTE, &smbusdata);
+			if (error >= 0) {
+				dev_err(&client->dev, "read mutex touch success 0x%02x\n", mutex_reg);
+				return -1;
+			}
+		}
+	}
 
 	error = goodix_get_gpio_config(ts);
 	if (error)
