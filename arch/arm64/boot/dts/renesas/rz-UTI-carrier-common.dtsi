@@ -284,6 +284,7 @@
 			default-state = "on";
 		};*/
    	};
+   
 
 	snd_rzg2l: sound {
 		compatible = "simple-audio-card";
@@ -574,14 +575,63 @@
 	#address-cells = <1>;
 	#size-cells = <0>;
 	
-	panel@0 {
+	panel-mipidsi@0 {
+	        compatible = "forlinx,mipi-dsi";
+
+	        reg = <0>;
+	        dsi-lanes = <4>;
+	        video-mode = <2>;	/* 0: burst mode
+				         * 1: non-burst mode with sync event
+				         * 2: non-burst mode with sync pulse
+				         */
+	        panel-width-mm = <68>;
+	        panel-height-mm = <121>;
+	        backlight = <&lcd_bl>;
+	        status = "okay";
+
+	        display-timings { //kernel
+
+		        panel7_1024x600_kernel: timings {
+			        hback-porch     = <88>;
+			        hfront-porch    = <40>;
+			        hactive         = <1024>;
+			        hsync-len       = <48>;
+			        vback-porch     = <32>;
+			        vfront-porch    = <13>;
+			        vactive         = <600>;
+			        vsync-len       = <3>;
+			        clock-frequency = <58000000>;
+			        vsync-active    = <0>;
+			        hsync-active    = <0>;
+			        de-active       = <0>;
+			        pixelclk-active = <0>;
+		        };
+
+	        };
+	        
+	        ports {
+		        #address-cells = <1>;
+		        #size-cells = <0>;
+
+	                port@0 {			
+			        reg = <0>;
+			        //dual-lvds-odd-pixels;
+			        panel_in: endpoint {
+				        remote-endpoint = <&dsi0_out>;
+			        };
+		        };
+		};
+	};
+	/*panel@0 {
 		#address-cells = <1>;
 		#size-cells = <0>;
 		status = "okay";
 		reg = <0>;
 		dsi-lanes = <4>;
-		backlight = <&lcd_bl>;		
-		compatible = "simple-panel-dsi";
+		backlight = <&lcd_bl>;	*/
+		
+			
+		/*compatible = "simple-panel-dsi";
 		reset-delay-ms = <10>;
                 enable-delay-ms = <60>;
                 prepare-delay-ms = <60>;
@@ -615,7 +665,7 @@
 			        de-active       = <0>;
 			        pixelclk-active = <0>;
 		        };
-		};
+		};*/
 		
 		/*compatible = "ronbo,rb070d30";	
 		reset-gpios = <&tca6424 16 GPIO_ACTIVE_LOW>; //placeholder - not really connected but need a GPIO to put in here
@@ -656,13 +706,13 @@
 			};
 		};	*/			 
 		
-		port@0 {			
+		/*port@0 {			
 			reg = <0>;
 			panel_in: endpoint {
 				remote-endpoint = <&dsi0_out>;
 			};
-		};
-	};
+		};*/
+	//};
 };
 
 
