@@ -134,6 +134,17 @@ struct rz_ssi_priv {
 	bool lrckp_fsync_fall;	/* LR clock polarity (SSICR.LRCKP) */
 	bool bckp_rise;	/* Bit clock polarity (SSICR.BCKP) */
 	bool dma_rt;
+
+	/* Full duplex communication support */
+	bool is_full_duplex;
+	int power_count;
+
+	struct {
+		unsigned int rate;
+		unsigned int channels;
+		unsigned int sample_width;
+		unsigned int sample_bits;
+	} hw_params_saved;
 };
 
 static void rz_ssi_dma_complete(void *data);
@@ -330,7 +341,8 @@ static int rz_ssi_start(struct rz_ssi_priv *ssi, struct rz_ssi_stream *strm)
 	u32 ssicr, ssifcr;
 
 	ssicr = rz_ssi_reg_readl(ssi, SSICR);
-	ssifcr = rz_ssi_reg_readl(ssi, SSIFCR) & ~0xF;
+	ssifcr = rz_ssi_reg_readl(ssi, SSIFCR);
+	ssifcr &= (ssi->is_full_duplex) ? (~0x3) : (~0xF);
 
 	/* FIFO interrupt thresholds */
 	if (rz_ssi_is_dma_enabled(ssi))
@@ -343,13 +355,14 @@ static int rz_ssi_start(struct rz_ssi_priv *ssi, struct rz_ssi_stream *strm)
 	/* enable IRQ */
 	if (is_play) {
 		ssicr |= SSICR_TUIEN | SSICR_TOIEN;
-		ssifcr |= SSIFCR_TIE | SSIFCR_RFRST;
+		ssifcr |= SSIFCR_TIE |
+			  ((ssi->is_full_duplex) ? 0 : SSIFCR_RFRST);
 	} else {
 		ssicr |= SSICR_RUIEN | SSICR_ROIEN;
-		ssifcr |= SSIFCR_RIE | SSIFCR_TFRST;
+		ssifcr |= SSIFCR_RIE |
+			  ((ssi->is_full_duplex) ? 0 : SSIFCR_TFRST);
 	}
 
-	rz_ssi_reg_writel(ssi, SSICR, ssicr);
 	rz_ssi_reg_writel(ssi, SSIFCR, ssifcr);
 
 	/* Clear all error flags */
@@ -358,8 +371,12 @@ static int rz_ssi_start(struct rz_ssi_priv *ssi, struct rz_ssi_stream *strm)
 			      SSISR_RUIRQ), 0);
 
 	strm->running = 1;
-	ssicr |= is_play ? SSICR_TEN : SSICR_REN;
+	ssicr |= (ssi->is_full_duplex) ? (SSICR_TEN | SSICR_REN) :
+		 (is_play ? SSICR_TEN : SSICR_REN);
+
 	rz_ssi_reg_writel(ssi, SSICR, ssicr);
+
+	ssi->power_count++;
 
 	return 0;
 }
@@ -369,38 +386,41 @@ static int rz_ssi_stop(struct rz_ssi_priv *ssi, struct rz_ssi_stream *strm)
 	int timeout;
 
 	strm->running = 0;
+	ssi->power_count--;
 
-	/* Disable TX/RX */
-	rz_ssi_reg_mask_setl(ssi, SSICR, SSICR_TEN | SSICR_REN, 0);
+	if (!ssi->power_count) {
+		/* Disable TX/RX */
+		rz_ssi_reg_mask_setl(ssi, SSICR, SSICR_TEN | SSICR_REN, 0);
 
-	/* Cancel all remaining DMA transactions */
-	if (rz_ssi_is_dma_enabled(ssi))
-		dmaengine_terminate_async(strm->dma_ch);
+		/* Cancel all remaining DMA transactions */
+		if (rz_ssi_is_dma_enabled(ssi))
+			dmaengine_terminate_async(strm->dma_ch);
 
-	/* Disable irqs */
-	rz_ssi_reg_mask_setl(ssi, SSICR, SSICR_TUIEN | SSICR_TOIEN |
-			     SSICR_RUIEN | SSICR_ROIEN, 0);
-	rz_ssi_reg_mask_setl(ssi, SSIFCR, SSIFCR_TIE | SSIFCR_RIE, 0);
+		/* Disable irqs */
+		rz_ssi_reg_mask_setl(ssi, SSICR, SSICR_TUIEN | SSICR_TOIEN |
+				     SSICR_RUIEN | SSICR_ROIEN, 0);
+		rz_ssi_reg_mask_setl(ssi, SSIFCR, SSIFCR_TIE | SSIFCR_RIE, 0);
 
-	/* Clear all error flags */
-	rz_ssi_reg_mask_setl(ssi, SSISR,
-			     (SSISR_TOIRQ | SSISR_TUIRQ | SSISR_ROIRQ |
-			      SSISR_RUIRQ), 0);
+		/* Clear all error flags */
+		rz_ssi_reg_mask_setl(ssi, SSISR,
+				     (SSISR_TOIRQ | SSISR_TUIRQ | SSISR_ROIRQ |
+				      SSISR_RUIRQ), 0);
 
-	/* Wait for idle */
-	timeout = 100;
-	while (--timeout) {
-		if (rz_ssi_reg_readl(ssi, SSISR) & SSISR_IIRQ)
-			break;
-		udelay(1);
+		/* Wait for idle */
+		timeout = 100;
+		while (--timeout) {
+			if (rz_ssi_reg_readl(ssi, SSISR) & SSISR_IIRQ)
+				break;
+			udelay(1);
+		}
+
+		if (!timeout)
+			dev_info(ssi->dev, "timeout waiting for SSI idle\n");
+
+		/* Hold FIFOs in reset */
+		rz_ssi_reg_mask_setl(ssi, SSIFCR, 0,
+				     SSIFCR_TFRST | SSIFCR_RFRST);
 	}
-
-	if (!timeout)
-		dev_info(ssi->dev, "timeout waiting for SSI idle\n");
-
-	/* Hold FIFOs in reset */
-	rz_ssi_reg_mask_setl(ssi, SSIFCR, 0,
-			     SSIFCR_TFRST | SSIFCR_RFRST);
 
 	return 0;
 }
@@ -552,32 +572,96 @@ static int rz_ssi_pio_send(struct rz_ssi_priv *ssi, struct rz_ssi_stream *strm)
 
 static irqreturn_t rz_ssi_interrupt(int irq, void *data)
 {
-	struct rz_ssi_stream *strm = NULL;
 	struct rz_ssi_priv *ssi = data;
 	u32 ssisr = rz_ssi_reg_readl(ssi, SSISR);
 
-	if (ssi->playback.substream)
-		strm = &ssi->playback;
-	else if (ssi->capture.substream)
-		strm = &ssi->capture;
-	else
-		return IRQ_HANDLED; /* Left over TX/RX interrupt */
+	if (!(ssi->is_full_duplex)) {
+		struct rz_ssi_stream *strm = NULL;
 
-	if (irq == ssi->irq_int) { /* error or idle */
-		if (ssisr & SSISR_TUIRQ)
-			strm->uerr_num++;
-		if (ssisr & SSISR_TOIRQ)
-			strm->oerr_num++;
-		if (ssisr & SSISR_RUIRQ)
-			strm->uerr_num++;
-		if (ssisr & SSISR_ROIRQ)
-			strm->oerr_num++;
+		if (ssi->playback.substream)
+			strm = &ssi->playback;
+		else if (ssi->capture.substream)
+			strm = &ssi->capture;
+		else
+			return IRQ_HANDLED; /* Left over TX/RX interrupt */
 
-		if (ssisr & (SSISR_TUIRQ | SSISR_TOIRQ | SSISR_RUIRQ |
-			     SSISR_ROIRQ)) {
-			/* Error handling */
-			/* You must reset (stop/restart) after each interrupt */
-			rz_ssi_stop(ssi, strm);
+		if (irq == ssi->irq_int) { /* error or idle */
+			if (ssisr & SSISR_TUIRQ)
+				strm->uerr_num++;
+			if (ssisr & SSISR_TOIRQ)
+				strm->oerr_num++;
+			if (ssisr & SSISR_RUIRQ)
+				strm->uerr_num++;
+			if (ssisr & SSISR_ROIRQ)
+				strm->oerr_num++;
+
+			if (ssisr & (SSISR_TUIRQ | SSISR_TOIRQ | SSISR_RUIRQ |
+				     SSISR_ROIRQ)) {
+				/* Error handling */
+				/* You must reset (stop/restart) after each interrupt */
+				rz_ssi_stop(ssi, strm);
+	
+				/* Clear all flags */
+				rz_ssi_reg_mask_setl(ssi, SSISR, SSISR_TOIRQ |
+						     SSISR_TUIRQ | SSISR_ROIRQ |
+						     SSISR_RUIRQ, 0);
+
+				/* Add/remove more data */
+				strm->transfer(ssi, strm);
+
+				/* Resume */
+				rz_ssi_start(ssi, strm);
+			}
+		}
+
+		if (!strm->running)
+			return IRQ_HANDLED;
+
+		/* tx data empty */
+		if (irq == ssi->irq_tx)
+			strm->transfer(ssi, &ssi->playback);
+
+		/* rx data full */
+		if (irq == ssi->irq_rx) {
+			strm->transfer(ssi, &ssi->capture);
+			rz_ssi_reg_mask_setl(ssi, SSIFSR, SSIFSR_RDF, 0);
+		}
+
+	} else {
+		struct rz_ssi_stream *strm_playback = NULL;
+		struct rz_ssi_stream *strm_capture = NULL;
+
+		if (ssi->playback.substream)
+			strm_playback = &ssi->playback;
+		if (ssi->capture.substream)
+			strm_capture = &ssi->capture;
+
+		if ((!strm_playback) && (!strm_capture))
+			return IRQ_HANDLED;
+
+		if (irq == ssi->irq_int) { /* error or idle */
+			int i, count;
+
+			if (rz_ssi_is_dma_enabled(ssi))
+				count = 4;
+			else
+				count = 1;
+
+			if (ssi->capture.substream) {
+				if (ssisr & SSISR_RUIRQ)
+					strm_capture->uerr_num++;
+				if (ssisr & SSISR_ROIRQ)
+					strm_capture->oerr_num++;
+				rz_ssi_stop(ssi, strm_capture);
+			}
+
+			if (ssi->playback.substream) {
+				if (ssisr & SSISR_TUIRQ)
+					strm_playback->uerr_num++;
+				if (ssisr & SSISR_TOIRQ)
+					strm_playback->oerr_num++;
+				rz_ssi_stop(ssi, strm_playback);
+			}
 
 			/* Clear all flags */
 			rz_ssi_reg_mask_setl(ssi, SSISR, SSISR_TOIRQ |
@@ -585,24 +669,35 @@ static irqreturn_t rz_ssi_interrupt(int irq, void *data)
 					     SSISR_RUIRQ, 0);
 
 			/* Add/remove more data */
-			strm->transfer(ssi, strm);
+			if (ssi->capture.substream) {
+				for (i = 0; i < count; i++)
+					strm_capture->transfer(ssi, strm_capture);
+			}
+
+			if (ssi->playback.substream) {
+				for (i = 0; i < count; i++)
+					strm_playback->transfer(ssi, strm_playback);
+			}
 
 			/* Resume */
-			rz_ssi_start(ssi, strm);
+			if (strm_playback)
+				rz_ssi_start(ssi, &ssi->playback);
+			if (strm_capture)
+				rz_ssi_start(ssi, &ssi->capture);
+		};
+
+		/* tx data empty */
+		if (irq == ssi->irq_tx && ssi->playback.substream &&
+		    strm_playback->running) {
+			strm_playback->transfer(ssi, &ssi->playback);
 		}
-	}
 
-	if (!strm->running)
-		return IRQ_HANDLED;
-
-	/* tx data empty */
-	if (irq == ssi->irq_tx)
-		strm->transfer(ssi, &ssi->playback);
-
-	/* rx data full */
-	if (irq == ssi->irq_rx) {
-		strm->transfer(ssi, &ssi->capture);
-		rz_ssi_reg_mask_setl(ssi, SSIFSR, SSIFSR_RDF, 0);
+		/* rx data full */
+		if (irq == ssi->irq_rx && ssi->capture.substream &&
+		    strm_capture->running) {
+			strm_capture->transfer(ssi, &ssi->capture);
+			rz_ssi_reg_mask_setl(ssi, SSIFSR, SSIFSR_RDF, 0);
+		}
 	}
 
 	return IRQ_HANDLED;
@@ -754,22 +849,33 @@ static int rz_ssi_dai_trigger(struct snd_pcm_substream *substream, int cmd,
 	struct rz_ssi_priv *ssi = snd_soc_dai_get_drvdata(dai);
 	struct rz_ssi_stream *strm = rz_ssi_stream_get(ssi, substream);
 	int ret = 0, i, num_transfer = 1;
+	bool is_playback;
 
 	switch (cmd) {
 	case SNDRV_PCM_TRIGGER_START:
 		/* Soft Reset */
-		rz_ssi_reg_mask_setl(ssi, SSIFCR, 0, SSIFCR_SSIRST);
-		rz_ssi_reg_mask_setl(ssi, SSIFCR, SSIFCR_SSIRST, 0);
-		udelay(5);
+		if (!ssi->power_count) {
+			rz_ssi_reg_mask_setl(ssi, SSIFCR, 0, SSIFCR_SSIRST);
+			rz_ssi_reg_mask_setl(ssi, SSIFCR, SSIFCR_SSIRST, 0);
+			udelay(5);
+		}
 
 		rz_ssi_stream_init(strm, substream);
 
+		is_playback = rz_ssi_stream_is_play(ssi, substream);
+
+		/*
+		 * HW limitation of full duplex communication:
+		 * Must have one or more frames of serial data in the
+		 * transmit FIFO data register (SSIFTDR).
+		 * So, record should not start if have not run playback yet.
+		 */
+		if ((ssi->is_full_duplex) && (!ssi->playback.substream) &&
+		    (!is_playback))
+			return -ENOTSUPP;
+
 		if (rz_ssi_is_dma_enabled(ssi)) {
 			if (ssi->dma_rt) {
-				bool is_playback;
-
-				is_playback = rz_ssi_stream_is_play(ssi,
-								    substream);
 				ret = rz_ssi_dma_slave_config(ssi,
 							ssi->playback.dma_ch,
 							is_playback);
@@ -803,6 +909,7 @@ static int rz_ssi_dai_trigger(struct snd_pcm_substream *substream, int cmd,
 		}
 
 		ret = rz_ssi_start(ssi, strm);
+
 		break;
 	case SNDRV_PCM_TRIGGER_STOP:
 		rz_ssi_stop(ssi, strm);
@@ -873,22 +980,43 @@ static int rz_ssi_dai_hw_params(struct snd_pcm_substream *substream,
 	unsigned int sample_bits = hw_param_interval(params,
 					SNDRV_PCM_HW_PARAM_SAMPLE_BITS)->min;
 	unsigned int channels = params_channels(params);
+	unsigned int sample_width = params_width(params);
+	unsigned int rate = params_rate(params);
+	int ret;
 
-	ssi->sample_width = params_width(params);
-	if ((sample_bits != 16) && (ssi->sample_width == 16)) {
-		dev_err(ssi->dev, "Unsupported sample width: %d\n",
-			sample_bits);
-		return -EINVAL;
+	if (!ssi->power_count) {
+		ssi->sample_width = sample_width;
+		if ((sample_bits != 16) && (ssi->sample_width == 16)) {
+			dev_err(ssi->dev, "Unsupported sample width: %d\n",
+				sample_bits);
+			return -EINVAL;
+		}
+
+		if (channels != 2) {
+			dev_err(ssi->dev, "Number of channels not matched: %d\n",
+				channels);
+			return -EINVAL;
+		}
+
+		ret = rz_ssi_clk_setup(ssi, rate, channels);
+		if (ret)
+			return ret;
+
+		ssi->hw_params_saved.rate = params_rate(params);
+		ssi->hw_params_saved.channels = channels;
+		ssi->hw_params_saved.sample_width = params_width(params);
+		ssi->hw_params_saved.sample_bits = sample_bits;
+	} else {
+		if ((ssi->hw_params_saved.rate != rate) ||
+		    (ssi->hw_params_saved.channels != channels) ||
+		    (ssi->hw_params_saved.sample_width != sample_width) ||
+		    (ssi->hw_params_saved.sample_bits != sample_bits)) {
+			dev_err(ssi->dev, "Full duplex needs same HW params\n");
+			return -EINVAL;
+		}
 	}
 
-	if (channels != 2) {
-		dev_err(ssi->dev, "Number of channels not matched: %d\n",
-			channels);
-		return -EINVAL;
-	}
-
-	return rz_ssi_clk_setup(ssi, params_rate(params),
-				params_channels(params));
+	return 0;
 }
 
 static const struct snd_soc_dai_ops rz_ssi_dai_ops = {
@@ -1008,6 +1136,10 @@ static int rz_ssi_probe(struct platform_device *pdev)
 				     "no audio clk1 or audio clk2");
 
 	ssi->audio_mck = ssi->audio_clk_1 ? ssi->audio_clk_1 : ssi->audio_clk_2;
+	ssi->is_full_duplex = device_property_read_bool(&pdev->dev,
+							"full-duplex");
+	if (ssi->is_full_duplex)
+		dev_info(&pdev->dev, "Full duplex communication enabled");
 
 	/* Detect DMA support */
 	ret = rz_ssi_dma_request(ssi, &pdev->dev);
@@ -1088,6 +1220,8 @@ static int rz_ssi_probe(struct platform_device *pdev)
 		dev_err(&pdev->dev, "failed to register snd component\n");
 		goto err_snd_soc;
 	}
+
+	ssi->power_count = 0;
 
 	return 0;
 
