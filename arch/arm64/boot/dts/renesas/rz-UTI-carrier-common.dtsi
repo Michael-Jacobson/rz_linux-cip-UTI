@@ -1,0 +1,612 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+/*
+ * Device Tree Source for the RZ/{G2L,G2LC,V2L} SMARC EVK common parts
+ *
+ * Copyright (C) 2022 Renesas Electronics Corp.
+ */
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
+
+
+/ {
+	aliases {
+		serial0 = &scif0;
+		i2c0 = &i2c0;
+		i2c1 = &i2c1;
+		i2c3 = &i2c3;
+		mmc0 = &sdhi0;
+		mmc1 = &sdhi1;
+		dsi0 = &dsi0;
+		du = &du;
+		reg_1p8v = &reg_1p8v;
+		reg_3p3v = &reg_3p3v;
+	};
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+	
+	EUP2681: fixedregulator-LDO6 {
+		compatible = "regulator-fixed";
+		regulator-name = "EUP2681";
+		regulator-min-microvolt = <13000000>;
+		regulator-max-microvolt = <2100000>;
+		regulator-always-on;
+	};
+	
+	x1_clk: x1-clock {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <24000000>;
+	};
+	
+	lcd_bl: backlight {
+		compatible = "gpio-backlight";
+		gpios = <&tca6424 13 GPIO_ACTIVE_HIGH>;
+		default-on;
+	};
+	
+
+	
+	/*gpio-keys { //this is for input GPIOs only
+		compatible = "gpio-keys";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		autorepeat;
+
+		HookSwitchOffhook {
+			label = "Handset Offhook";
+			linux,code = <0x88>;
+			wakeup-source;
+            		interrupt-parent = <&pinctrl>;
+            		interrupts = <RZG2L_GPIO(47, 2) IRQ_TYPE_EDGE_FALLING>;
+			debounce-interval = <7>; //The max debounce value is 7936 microseconds, so 7ms
+			//gpios = <&pinctrl RZG2L_GPIO(47, 2) GPIO_ACTIVE_HIGH>;
+		};
+		
+		RingDetectHigh {
+			label = "RingDetect"; 
+			linux,code = <0x8B>;
+			wakeup-source;
+            		interrupt-parent = <&pinctrl>;
+            		interrupts = <RZG2L_GPIO(42, 4) IRQ_TYPE_EDGE_FALLING>;
+			debounce-interval = <1>;
+			//gpios = <&pinctrl RZG2L_GPIO(42, 4) GPIO_ACTIVE_HIGH>;
+		};
+		
+		
+		LossOfPowerDetect {
+			label = "LossOfPowerDetect"; shit shit 
+			linux,code = <0x8C>;
+			debounce-interval = <0>;
+			gpios = <&gpio1 1 0>;
+		};
+	};*/
+	
+	gpio-keys-polled { //this is for input GPIOs only
+		compatible = "gpio-keys-polled";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		poll-interval = <1>; //milliseconds
+		autorepeat;
+		
+		HookSwitch {
+			label = "Handset Offhook";
+			//linux,code = <0x88>;
+			linux,code = <0x07>;
+			debounce-interval = <10>; //The max debounce value is ??
+			linux,input-type = <5>; //EV_SW
+			gpios = <&pinctrl RZG2L_GPIO(47, 2) GPIO_ACTIVE_HIGH>;
+		};	
+		
+		RingDetect {
+			label = "RingDetect"; 
+			//linux,code = <0x8B>;
+			linux,code = <0x08>;
+			//debounce-interval = <1>;
+			linux,input-type = <5>; //EV_SW
+			gpios = <&pinctrl RZG2L_GPIO(42, 4) GPIO_ACTIVE_LOW>;
+		};
+		
+		LineInUse {
+			label = "LineInUse"; 
+			//linux,code = <0x90>;
+			linux,code = <0x09>;
+			//debounce-interval = <1>;
+			linux,input-type = <5>; //EV_SW
+			gpios = <&tca6424 21 GPIO_ACTIVE_HIGH>;
+		};
+		
+		LoopDetect {
+			label = "LoopDetect"; 
+			//linux,code = <0x92>;
+			linux,code = <0x0A>;
+			//debounce-interval = <1>;
+			linux,input-type = <5>; //EV_SW
+			gpios = <&tca6424 22 GPIO_ACTIVE_HIGH>;
+		};
+	};
+	
+	
+	/*matrix_keypad: matrix_keypad0 {
+		compatible = "gpio-matrix-keypad";  
+		debounce-delay-ms = <5>;
+		col-scan-delay-us = <2>;
+		interrupt-parent = <&pinctrl>;
+		//pinctrl-names = "default";
+		//pinctrl-0 = <&gpio_matrix_keyboard_rows &gpio_matrix_keyboard_cols>;
+		
+		//pinctrl-0 = <&pinctrl>;
+
+		//gpio-activelow;
+		//linux,wakeup;
+
+		row-gpios = <	&pinctrl RZG2L_GPIO(41, 0) GPIO_ACTIVE_HIGH
+				&pinctrl RZG2L_GPIO(43, 1) GPIO_ACTIVE_HIGH //IRQ5
+				&pinctrl RZG2L_GPIO(42, 2) GPIO_ACTIVE_HIGH
+				&pinctrl RZG2L_GPIO(42, 3) GPIO_ACTIVE_HIGH
+				&pinctrl RZG2L_GPIO(3, 1) GPIO_ACTIVE_HIGH>;
+
+		col-gpios = <	&pinctrl RZG2L_GPIO(3, 0) GPIO_ACTIVE_HIGH //IRQ7
+				&pinctrl RZG2L_GPIO(2, 0) GPIO_ACTIVE_HIGH //IRQ4
+				&pinctrl RZG2L_GPIO(2, 1) GPIO_ACTIVE_HIGH //IRQ5
+				&pinctrl RZG2L_GPIO(40, 2) GPIO_ACTIVE_HIGH>;			
+
+		linux,keymap = <0x0000009A      // VOL UP /
+				0x00010099      // VOL DN /
+				//0x0002009F      //  /
+				0x0003009E      // CSTSV /
+
+				0x010000B1      // DTMF1 /
+				0x010100B2      // DTMF2 /
+				0x010200B3      // DTMF3 /
+				0x0103009F      // HOME /
+
+				0x020000B4      // DTMF4 /
+				0x020100B5      // DTMF5 /
+				0x020200B6      // DTMF6 /
+				0x02030098      // CAPTION /
+
+				0x030000B7      // DTMF7 /
+				0x030100B8      // DTMF8 /
+				0x030200B9      // DTMF9 /
+				0x03030096      // SPKR /
+
+				0x040000BA      // DTMF* /
+				0x040100B0      // DTMF0 /
+				0x040200BB      // DTMF# /
+				0x04030097>;      // MUTE /
+	};*/
+	
+	leds {
+	       	compatible = "gpio-leds"; 
+
+	       	//pinctrl-names = "default";
+       		//pinctrl-0 = <&tca6424>;
+
+	       	mute_led {
+		   	label = "mute_led";
+		   	gpios = <&tca6424 2 GPIO_ACTIVE_HIGH>; // Bank 4, pin 1 
+		   	default-state = "off";	   
+	       	};
+	       
+	       	captions_led {
+		   	label = "captions_led";
+		   	gpios = <&tca6424 1 GPIO_ACTIVE_HIGH>; // Bank 4, pin 2 
+		   	default-state = "off";
+	       	};
+
+	       	keypad_led {
+		   	label = "keypad_led";
+		   	gpios = <&tca6424 9 GPIO_ACTIVE_HIGH>; // Bank 4, pin 3 
+		   	default-state = "off";
+   	    	};
+
+		vol6_led {
+		   	label = "vol6_led";
+		   	gpios = <&tca6424 8 GPIO_ACTIVE_HIGH>; // Bank 4, pin 4 
+		   	default-state = "off";
+		   	//linux,default-trigger = "timer";
+	       	};
+
+		vol5_led {
+		   	label = "vol5_led";
+		   	gpios = <&tca6424 7 GPIO_ACTIVE_HIGH>; // Bank 4, pin 5 
+		   	default-state = "off";
+		   	//linux,default-trigger = "timer";
+	       	};
+
+		vol4_led {
+		   	label = "vol4_led";
+		   	gpios = <&tca6424 6 GPIO_ACTIVE_HIGH>; // Bank 4, pin 6 
+		   	default-state = "off";
+		   	//linux,default-trigger = "timer";
+	       	};
+		
+		vol3_led {
+		   	label = "vol3_led";
+		   	gpios = <&tca6424 5 GPIO_ACTIVE_HIGH>; // Bank 4, pin 7 
+		   	default-state = "off";
+		   	//linux,default-trigger = "timer";
+	       	};
+
+		vol2_led {
+		   	label = "vol2_led";
+		   	gpios = <&tca6424 4 GPIO_ACTIVE_HIGH>; // Bank 4, pin 8 
+		   	default-state = "off";
+		   	//linux,default-trigger = "timer";
+	       	};
+
+		vol1_led {
+		   	label = "vol1_led";
+		   	gpios = <&tca6424 3 GPIO_ACTIVE_HIGH>; // Bank 4, pin 9 
+		   	default-state = "off";
+		   	//linux,default-trigger = "timer";
+	       	};
+
+	       	spkr_led {
+		   	label = "spkr_led";
+		   	gpios = <&tca6424 0 GPIO_ACTIVE_HIGH>;  // Bank 4, pin 10 
+		   	default-state = "off";
+		};
+		
+		RingFlasher {
+			label = "RingFlasher";
+	   		gpios = <&tca6424 15 GPIO_ACTIVE_HIGH>;  // Bank 4, pin 21 
+	   		default-state = "off";
+	   		//linux,default-trigger = "timer";
+	   		//flash-max-timeout-us = <1000000>;
+		};
+		
+		//temporary!!!!!!!!!!!!!!!!
+		TouchReset {
+			label = "Touch Screen Reset";
+			gpios = <&tca6424 12 GPIO_ACTIVE_LOW>;
+			default-state = "off";
+		};
+		
+		//temporary!!!!!!!!!!!!!!!!
+		/*LCDBacklight {
+			label = "Display Backlight";
+			gpios = <&tca6424 13 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};*/
+   	};
+   
+
+	snd_rzg2l: sound {
+		compatible = "simple-audio-card";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,bitclock-master = <&cpu_dai>;
+		simple-audio-card,frame-master = <&cpu_dai>;
+		//simple-audio-card,bitclock-inversion;
+		//simple-audio-card,mclk-fs = <256>;
+
+		simple-audio-card,widgets = 
+			"Speaker", "POTS Line Out",
+			"Speaker", "Handset Speaker",			
+			"Speaker", "External Speaker",			
+			"Line", "POTS Line In",
+			"Microphone", "Handset Mic";			
+			//"Line", "External Mic"; 		
+		simple-audio-card,routing = 
+			"POTS Line Out",	"MONO_LOUT",
+			"Handset Speaker",	"LLOUT",		
+			"External Speaker",	"RLOUT",		
+			"LINE2R",		"POTS Line In",
+			"LINE1L",		"Handset Mic",		
+			//"DMICR",		"External Mic",	
+			"Handset Mic",		"Mic Bias";		
+
+		cpu_dai: simple-audio-card,cpu {
+			sound-dai = <&ssi0>;
+			clocks = <&versa3 0>;
+			system-clock-frequency = <12288000>;
+		};
+
+		sound0_master: simple-audio-card,codec {
+			sound-dai = <&tlv320aic3106>;
+			clocks = <&versa3 3>;
+			//clocks = <&audio_mstrclk>;
+			system-clock-frequency = <12288000>;
+		};
+	};
+	
+	audio_mstrclk: mclk_osc {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <24000000>;
+	};
+
+	usb0_vbus_otg: regulator-usb0-vbus-otg {
+		compatible = "regulator-fixed";
+
+		regulator-name = "USB0_VBUS_OTG";
+		regulator-min-microvolt = <5000000>;
+		regulator-max-microvolt = <5000000>;
+	};
+
+	vccq_sdhi1: regulator-vccq-sdhi1 {
+		compatible = "regulator-gpio";
+		regulator-name = "SDHI1 VccQ";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <3300000>;
+		gpios-states = <1>;
+		states = <3300000 1>, <1800000 0>;
+	};
+};
+
+&audio_clk1{
+	clock-frequency = <12288000>;
+};
+
+&audio_clk2{
+	clock-frequency = <12288000>;
+};
+
+
+&ehci0 { //USB
+	dr_mode = "otg";
+	status = "okay";
+};
+
+&ehci1 { //USB
+	status = "okay";
+};
+
+&hsusb { //USB
+	dr_mode = "otg";
+	status = "okay";
+};
+
+&i2c0 {
+	pinctrl-0 = <&i2c0_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&i2c1 {
+	status = "okay";
+
+	gt911@5d {
+		compatible = "goodix,gt911";
+		reg = <0x5d>;
+		interrupt-parent = <&pinctrl>;
+		interrupts = <RZG2L_GPIO(5, 2) IRQ_TYPE_EDGE_FALLING>;
+		irq-gpios = <&pinctrl RZG2L_GPIO(5, 2) GPIO_ACTIVE_LOW>;
+		reset-gpios = <&tca6424 14 GPIO_ACTIVE_LOW>;	
+		AVDD28-supply = <&reg_3p3v>;
+		VDDIO-supply = <&reg_3p3v>;
+		touchscreen-size-x = <1024>;
+		touchscreen-size-y = <600>;	
+		status = "okay";
+      	};
+      	
+      	/*tsc2007@49 {
+		compatible = "ti,tsc2007";
+		reg = <0x49>;
+		interrupt-parent = <&pinctrl>;
+		interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
+		gpios = <&pinctrl RZG2L_GPIO(5, 2) GPIO_ACTIVE_LOW>;
+		ti,x-plate-ohms = <180>;
+	};*/
+	
+	//add digital POT
+};
+
+&i2c3 {
+	status = "okay";
+	//pinctrl-names = "default";
+	//pinctrl-0 = <&i2c3_pins>;
+
+	tlv320aic3106: tlv320aic3106@18 {
+		#sound-dai-cells = <0>;
+		compatible = "ti,tlv320aic3106";
+		reg = <0x18>;
+		status = "okay";
+		ai3x-micbias-vg = <1>;
+		ai3x-ocmv = <2>;
+		reset-gpios = <&pinctrl RZG2L_GPIO(43, 2) GPIO_ACTIVE_LOW>;
+		
+		AVDD-supply = <&reg_3p3v>;
+		IOVDD-supply = <&reg_1p8v>;
+		DRVDD-supply = <&reg_3p3v>;
+		DVDD-supply = <&reg_1p8v>;
+	};
+	
+	versa3: versa3@68 {
+		compatible = "renesas,5p35023";
+		reg = <0x68>;
+		#clock-cells = <1>;
+		clocks = <&x1_clk>;
+		clock-names = "x1";
+		//0 - REF, 1 - SE1, 2 - SE2, 3 - SE3, 4 - DIFF1, 5 - DIFF2.
+		assigned-clocks = <&versa3 0>,
+				   <&versa3 1>,
+				   <&versa3 2>,
+				   <&versa3 3>,
+				   <&versa3 4>,
+				   <&versa3 5>;
+		assigned-clock-rates =	<12288000>, //AUDIO_CLK2
+					<25000000>, // Ethernet Phy
+					<24000000>, //unused
+					<12288000>, //AUDIO_MCK
+					<12288000>, //AUDIO_CLK1
+					<24000000>; //Ref
+		//clock-divider-read-only = <1>, <1>, <1>, <1>, <1>;
+		clock-flags = <2176>, <2176>, <2176>, <2052>, <2176>, <2048>;
+	};
+	
+	//NOTE to find the driver for this look for PCA953x
+	tca6424: tca6424@22 {
+		compatible = "ti,tca6424";
+		reg = <0x22>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		gpio-line-names =
+			"SPKR_LED", 	//p0 = 0
+			"CAPTIONS_LED", //p1 = 1
+			"MUTE_LED", 	//p2 = 2
+			"VOL1_LED", 	//p3 = 3
+			"VOL2_LED", 	//p4 = 4
+			"VOL3_LED", 	//p5 = 5
+			"VOL4_LED",	//p6 = 6
+			"VOL5_LED", 	//p7 = 7
+			"VOL6_LED", 	//p10 = 8
+			"KEYPAD_LED", 	//p11 = 9
+			"unused1", 	//p12 = 10
+			"unused2", 	//p13 = 11
+			"TOUCH_RESET", 	//p14 = 12
+			"BACKLIGHT_EN",	//p15 = 13
+			"unused3", 	//p16 = 14
+			"FLASHER_LEDS",	//p17 = 15
+			"unused4", 	//p20 = 16
+			"unused5", 	//p21 = 17
+			"unused6", 	//p22 = 18
+			"unused7", 	//p23 = 19
+			"unused8", 	//p24 = 20
+			"LINE_IN_USE", 	//p25 = 21
+			"LOOP_DETECT",	//p26 = 22
+			"POLARITY";	//p27 = 23			
+	    };
+};
+
+&ohci0 { //USB
+	dr_mode = "otg";
+	status = "okay";
+};
+
+&ohci1 { //USB
+	status = "okay";
+};
+
+&phyrst {
+	status = "okay";
+};
+
+&scif0 {
+	pinctrl-0 = <&scif0_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&sdhi1 { //USB
+	pinctrl-0 = <&sdhi1_pins>;
+	pinctrl-1 = <&sdhi1_pins_uhs>;
+	pinctrl-names = "default", "state_uhs";
+
+	vmmc-supply = <&reg_3p3v>;
+	vqmmc-supply = <&vccq_sdhi1>;
+	bus-width = <4>;
+	sd-uhs-sdr50;
+	sd-uhs-sdr104;
+	status = "okay";
+};
+
+#if (!MTU3_PWM_SUPPORT)
+&spi1 {
+	pinctrl-0 = <&spi1_pins>;
+	pinctrl-names = "default";
+	dmas = <&dmac 0x2e99>, <&dmac 0x2e9a>;
+	dma-names = "tx", "rx";
+
+	status = "okay";
+};
+#endif
+
+&usb2_phy0 { //USB
+	pinctrl-0 = <&usb0_pins>;
+	pinctrl-names = "default";
+
+	vbus-supply = <&usb0_vbus_otg>;
+	status = "okay";
+};
+
+&usb2_phy1 { //USB
+	pinctrl-0 = <&usb1_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+};
+
+&du {
+	status = "okay";
+};
+
+&dsi0 {
+	status = "okay";
+	#address-cells = <1>;
+	#size-cells = <0>;
+	
+	panel-mipidsi@0 {
+	        compatible = "forlinx,mipi-dsi";
+
+	        reg = <0>;
+	        dsi-lanes = <4>;
+	        video-mode = <2>;	/* 0: burst mode
+				         * 1: non-burst mode with sync event
+				         * 2: non-burst mode with sync pulse
+				         */
+	        panel-width-mm = <68>;
+	        panel-height-mm = <121>;
+	        backlight = <&lcd_bl>;
+	        status = "okay";
+
+	        display-timings { //kernel
+
+		        panel7_1024x600_kernel: timings {
+			        hback-porch     = <88>;
+			        hfront-porch    = <40>;
+			        hactive         = <1024>;
+			        hsync-len       = <48>;
+			        vback-porch     = <32>;
+			        vfront-porch    = <13>;
+			        vactive         = <600>;
+			        vsync-len       = <3>;
+			        clock-frequency = <58000000>;
+			        vsync-active    = <0>;
+			        hsync-active    = <0>;
+			        de-active       = <0>;
+			        pixelclk-active = <0>;
+		        };
+
+	        };
+	        
+	        ports {
+		        #address-cells = <1>;
+		        #size-cells = <0>;
+
+	                port@0 {			
+			        reg = <0>;
+			        //dual-lvds-odd-pixels;
+			        panel_in: endpoint {
+				        remote-endpoint = <&dsi0_out>;
+			        };
+		        };
+		};
+	};	
+};
+
+
+&cru {
+	status = "okay";
+};
+
+/*&csi2 {
+	status = "okay";
+
+	ports {
+		port {
+			csi2_in: endpoint {
+				clock-lanes = <0>;
+				data-lanes = <1 2>;
+				remote-endpoint = <&ov5645_to_csi>;
+			};
+		};
+	};
+};*/
+
+&mtu3 {
+	status = "okay";
+};
