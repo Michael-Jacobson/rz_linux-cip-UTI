@@ -2809,6 +2809,14 @@ static const struct renesas_usb3_priv renesas_usb3_priv_rzv2m = {
 	.num_ramif = 1,
 	.ramsize_per_pipe = SZ_4K,
 	.is_rzv2m = true,
+	.use_64_bit_dma = true,
+};
+
+static const struct renesas_usb3_priv renesas_usb3_priv_rzv2ma = {
+        .ramsize_per_ramif = SZ_16K,
+        .num_ramif = 1,
+        .ramsize_per_pipe = SZ_4K,
+        .is_rzv2m = true,
 };
 
 static const struct of_device_id usb3_of_match[] = {
@@ -2826,7 +2834,7 @@ static const struct of_device_id usb3_of_match[] = {
 		.data = &renesas_usb3_priv_rzv2m,
         }, {
                 .compatible = "renesas,rzv2ma-usb3-peri",
-                .data = &renesas_usb3_priv_rzv2m,
+                .data = &renesas_usb3_priv_rzv2ma,
         }, {
 		.compatible = "renesas,rcar-gen3-usb3-peri",
 		.data = &renesas_usb3_priv_gen3,
@@ -2877,6 +2885,12 @@ static int renesas_usb3_probe(struct platform_device *pdev)
 		return -ENOMEM;
 
 	usb3->is_rzv2m = priv->is_rzv2m;
+	usb3->use_64_bit_dma = priv->use_64_bit_dma;
+	/* Try 64-bit mask if hardware is capable of it */
+	if (usb3->use_64_bit_dma) {
+		if (dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64)))
+			dev_err(&pdev->dev, "Failed to set 64-bit DMA mask!");
+	}
 
 	usb3->reg = devm_platform_ioremap_resource(pdev, 0);
 	if (IS_ERR(usb3->reg))
