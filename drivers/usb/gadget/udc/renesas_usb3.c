@@ -332,6 +332,7 @@ struct renesas_usb3_priv {
 	int ramsize_per_pipe;		/* unit = bytes */
 	bool workaround_for_vbus;	/* if true, don't check vbus signal */
 	bool is_rzv2m;			/* if true, RZ/V2M SoC */
+	bool use_64_bit_dma;		/* if true, use 64-bit for DMA descriptor  */
 };
 
 struct renesas_usb3 {
@@ -372,6 +373,7 @@ struct renesas_usb3 {
 	bool start_to_connect;
 	bool role_sw_by_connector;
 	bool is_rzv2m;
+	bool use_64_bit_dma;            /* if true, use 64-bit for DMA descriptor  */
 };
 
 #define gadget_to_renesas_usb3(_gadget)	\

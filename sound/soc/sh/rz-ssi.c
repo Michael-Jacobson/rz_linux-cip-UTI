@@ -385,8 +385,9 @@ static int rz_ssi_stop(struct rz_ssi_priv *ssi, struct rz_ssi_stream *strm)
 {
 	int timeout;
 
+	if (strm->running)
+		ssi->power_count--;
 	strm->running = 0;
-	ssi->power_count--;
 
 	if (!ssi->power_count) {
 		/* Disable TX/RX */
@@ -583,9 +584,11 @@ static irqreturn_t rz_ssi_interrupt(int irq, void *data)
 		else if (ssi->capture.substream)
 			strm = &ssi->capture;
 		else
-			return IRQ_HANDLED; /* Left over TX/RX interrupt */
+			/* Left over TX/RX interrupt */
+			return IRQ_HANDLED;
 
-		if (irq == ssi->irq_int) { /* error or idle */
+		/* error or idle */
+		if (irq == ssi->irq_int) {
 			if (ssisr & SSISR_TUIRQ)
 				strm->uerr_num++;
 			if (ssisr & SSISR_TOIRQ)
@@ -597,10 +600,12 @@ static irqreturn_t rz_ssi_interrupt(int irq, void *data)
 
 			if (ssisr & (SSISR_TUIRQ | SSISR_TOIRQ | SSISR_RUIRQ |
 				     SSISR_ROIRQ)) {
-				/* Error handling */
-				/* You must reset (stop/restart) after each interrupt */
+				/*
+				 * Error handling
+				 * You must reset (stop/restart) after each interrupt
+				 */
 				rz_ssi_stop(ssi, strm);
-	
+
 				/* Clear all flags */
 				rz_ssi_reg_mask_setl(ssi, SSISR, SSISR_TOIRQ |
 						     SSISR_TUIRQ | SSISR_ROIRQ |
@@ -872,7 +877,7 @@ static int rz_ssi_dai_trigger(struct snd_pcm_substream *substream, int cmd,
 		 */
 		if ((ssi->is_full_duplex) && (!ssi->playback.substream) &&
 		    (!is_playback))
-			return -ENOTSUPP;
+			return -EOPNOTSUPP;
 
 		if (rz_ssi_is_dma_enabled(ssi)) {
 			if (ssi->dma_rt) {
@@ -1086,11 +1091,64 @@ static struct snd_soc_dai_driver rz_ssi_soc_dai[] = {
 	},
 };
 
+static int rz_ssi_full_duplex_mode_get(struct snd_kcontrol *kcontrol,
+				       struct snd_ctl_elem_value *ucontrol)
+{
+	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
+	struct device *dev = component->dev;
+	struct platform_device *pdev = to_platform_device(dev);
+	struct rz_ssi_priv *ssi = platform_get_drvdata(pdev);
+
+	ucontrol->value.integer.value[0] = ssi->is_full_duplex;
+	return 0;
+}
+
+static int rz_ssi_full_duplex_mode_put(struct snd_kcontrol *kcontrol,
+				       struct snd_ctl_elem_value *ucontrol)
+{
+	int new_value = ucontrol->value.integer.value[0];
+	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
+	struct device *dev = component->dev;
+	struct platform_device *pdev = to_platform_device(dev);
+	struct rz_ssi_priv *ssi = platform_get_drvdata(pdev);
+
+	/* Only set mode when all is stopped */
+	if (ssi->playback.running || ssi->capture.running)
+		return -EBUSY;
+
+	ssi->is_full_duplex = new_value;
+
+	/* Not support Full Duplex communication for channel that uses dma_rt */
+	if (ssi->dma_rt)
+		ssi->is_full_duplex = false;
+
+	if (ssi->is_full_duplex)
+		dev_info(&pdev->dev, "Full duplex communication enabled");
+	else
+		dev_info(&pdev->dev, "Half duplex communication enabled");
+
+	return 0;
+}
+
+static const struct snd_kcontrol_new rz_ssi_snd_kcontrol[] = {
+	{
+		.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+		.name = "Full duplex mode",
+		.index = 0,
+		.access = SNDRV_CTL_ELEM_ACCESS_READWRITE,
+		.info = snd_ctl_boolean_mono_info,
+		.get = rz_ssi_full_duplex_mode_get,
+		.put = rz_ssi_full_duplex_mode_put,
+	}
+};
+
 static const struct snd_soc_component_driver rz_ssi_soc_component = {
 	.name		= "rz-ssi",
 	.open		= rz_ssi_pcm_open,
 	.pointer	= rz_ssi_pcm_pointer,
 	.pcm_construct	= rz_ssi_pcm_new,
+	.controls	= rz_ssi_snd_kcontrol,
+	.num_controls	= ARRAY_SIZE(rz_ssi_snd_kcontrol),
 };
 
 static int rz_ssi_probe(struct platform_device *pdev)
@@ -1136,10 +1194,6 @@ static int rz_ssi_probe(struct platform_device *pdev)
 				     "no audio clk1 or audio clk2");
 
 	ssi->audio_mck = ssi->audio_clk_1 ? ssi->audio_clk_1 : ssi->audio_clk_2;
-	ssi->is_full_duplex = device_property_read_bool(&pdev->dev,
-							"full-duplex");
-	if (ssi->is_full_duplex)
-		dev_info(&pdev->dev, "Full duplex communication enabled");
 
 	/* Detect DMA support */
 	ret = rz_ssi_dma_request(ssi, &pdev->dev);
