@@ -289,14 +289,14 @@
 			"Speaker", "External Speaker",			
 			"Line", "POTS Line In",
 			"Microphone", "Handset Mic";			
-			"Line", "External Mic"; 		
+			//"Line", "External Mic"; 		
 		simple-audio-card,routing = 
 			"POTS Line Out",	"MONO_LOUT",
 			"Handset Speaker",	"LLOUT",		
 			"External Speaker",	"RLOUT",		
 			"LINE2R",		"POTS Line In",
 			"LINE1L",		"Handset Mic",		
-			"DMICR",		"External Mic",	
+			//"DMICR",		"External Mic",	
 			"Handset Mic",		"Mic Bias";		
 
 		cpu_dai: simple-audio-card,cpu {
