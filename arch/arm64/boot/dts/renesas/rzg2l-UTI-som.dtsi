@@ -150,6 +150,8 @@
 	phy-handle = <&phy0>;
 	phy-mode = "rgmii-id";
 	status = "okay";
+	
+	local-mac-address = [00 1B C4 03 D0 8F];
 
 	phy0: ethernet-phy@7 {
 		compatible = "ethernet-phy-id0022.1640",
