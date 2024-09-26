@@ -180,7 +180,7 @@
 	pinctrl-names = "default";
 	phy-handle = <&phy1>;
 	phy-mode = "rgmii-id";
-	status = "okay";
+	status = "disabled";
 
 	phy1: ethernet-phy@7 {
 		compatible = "ethernet-phy-id0022.1640",
