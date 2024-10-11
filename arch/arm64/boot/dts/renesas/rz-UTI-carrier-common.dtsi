@@ -43,11 +43,16 @@
 	
 	lcd_bl: backlight {
 		compatible = "gpio-backlight";
-		gpios = <&tca6424 13 GPIO_ACTIVE_HIGH>;
+		gpios = <&pinctrl RZG2L_GPIO(9, 0) GPIO_ACTIVE_HIGH>;
 		default-on;
 	};
 	
-
+        /*lcd_bl: backlight {
+		compatible = "pwm-backlight";
+		pwms = <&mtu3 0 1200>;
+		brightness-levels = <0 50 70 90 110 130 150 170 190 210 255>;
+		default-brightness-level = <10>;
+	};*/
 	
 	/*gpio-keys { //this is for input GPIOs only
 		compatible = "gpio-keys";
@@ -58,29 +63,33 @@
 		HookSwitchOffhook {
 			label = "Handset Offhook";
 			linux,code = <0x88>;
-			wakeup-source;
+			//wakeup-source;
             		interrupt-parent = <&pinctrl>;
-            		interrupts = <RZG2L_GPIO(47, 2) IRQ_TYPE_EDGE_FALLING>;
-			debounce-interval = <7>; //The max debounce value is 7936 microseconds, so 7ms
-			//gpios = <&pinctrl RZG2L_GPIO(47, 2) GPIO_ACTIVE_HIGH>;
+            		interrupts = <RZG2L_GPIO(3, 1) IRQ_TYPE_EDGE_FALLING>;
+			debounce-interval = <10>; 
 		};
 		
 		RingDetectHigh {
 			label = "RingDetect"; 
 			linux,code = <0x8B>;
-			wakeup-source;
+			//wakeup-source;
             		interrupt-parent = <&pinctrl>;
-            		interrupts = <RZG2L_GPIO(42, 4) IRQ_TYPE_EDGE_FALLING>;
+            		interrupts = <RZG2L_GPIO(2, 1) IRQ_TYPE_EDGE_FALLING>;
 			debounce-interval = <1>;
-			//gpios = <&pinctrl RZG2L_GPIO(42, 4) GPIO_ACTIVE_HIGH>;
 		};
 		
+		LineInUse {
+			label = "LineInUse"; 
+			linux,code = <0x09>;
+			debounce-interval = <1>;
+			interrupts = <RZG2L_GPIO(48, 4) IRQ_TYPE_EDGE_FALLING>;
+		};
 		
-		LossOfPowerDetect {
-			label = "LossOfPowerDetect"; shit shit 
-			linux,code = <0x8C>;
-			debounce-interval = <0>;
-			gpios = <&gpio1 1 0>;
+		LoopDetect {
+			label = "LoopDetect"; 
+			linux,code = <0x0A>;
+			debounce-interval = <1>;
+			interrupts = <RZG2L_GPIO(48, 2) IRQ_TYPE_EDGE_FALLING>;
 		};
 	};*/
 	
@@ -97,7 +106,7 @@
 			linux,code = <0x07>;
 			debounce-interval = <10>; //The max debounce value is ??
 			linux,input-type = <5>; //EV_SW
-			gpios = <&pinctrl RZG2L_GPIO(47, 2) GPIO_ACTIVE_HIGH>;
+			gpios = <&pinctrl RZG2L_GPIO(3, 1) GPIO_ACTIVE_HIGH>;
 		};	
 		
 		RingDetect {
@@ -106,7 +115,7 @@
 			linux,code = <0x08>;
 			//debounce-interval = <1>;
 			linux,input-type = <5>; //EV_SW
-			gpios = <&pinctrl RZG2L_GPIO(42, 4) GPIO_ACTIVE_LOW>;
+			gpios = <&pinctrl RZG2L_GPIO(2, 1) GPIO_ACTIVE_LOW>;
 		};
 		
 		LineInUse {
@@ -115,7 +124,7 @@
 			linux,code = <0x09>;
 			//debounce-interval = <1>;
 			linux,input-type = <5>; //EV_SW
-			gpios = <&tca6424 21 GPIO_ACTIVE_HIGH>;
+			gpios = <&pinctrl RZG2L_GPIO(48, 4) GPIO_ACTIVE_HIGH>;
 		};
 		
 		LoopDetect {
@@ -124,7 +133,7 @@
 			linux,code = <0x0A>;
 			//debounce-interval = <1>;
 			linux,input-type = <5>; //EV_SW
-			gpios = <&tca6424 22 GPIO_ACTIVE_HIGH>;
+			gpios = <&pinctrl RZG2L_GPIO(48, 2) GPIO_ACTIVE_HIGH>;
 		};
 	};
 	
@@ -142,16 +151,16 @@
 		//gpio-activelow;
 		//linux,wakeup;
 
-		row-gpios = <	&pinctrl RZG2L_GPIO(41, 0) GPIO_ACTIVE_HIGH
-				&pinctrl RZG2L_GPIO(43, 1) GPIO_ACTIVE_HIGH //IRQ5
-				&pinctrl RZG2L_GPIO(42, 2) GPIO_ACTIVE_HIGH
-				&pinctrl RZG2L_GPIO(42, 3) GPIO_ACTIVE_HIGH
-				&pinctrl RZG2L_GPIO(3, 1) GPIO_ACTIVE_HIGH>;
+		row-gpios = <	&pinctrl RZG2L_GPIO(0, 0) GPIO_ACTIVE_HIGH
+				&pinctrl RZG2L_GPIO(0, 1) GPIO_ACTIVE_HIGH 
+				&pinctrl RZG2L_GPIO(1, 0) GPIO_ACTIVE_HIGH
+				&pinctrl RZG2L_GPIO(2, 0) GPIO_ACTIVE_HIGH
+				&pinctrl RZG2L_GPIO(2, 1) GPIO_ACTIVE_HIGH>;
 
-		col-gpios = <	&pinctrl RZG2L_GPIO(3, 0) GPIO_ACTIVE_HIGH //IRQ7
-				&pinctrl RZG2L_GPIO(2, 0) GPIO_ACTIVE_HIGH //IRQ4
-				&pinctrl RZG2L_GPIO(2, 1) GPIO_ACTIVE_HIGH //IRQ5
-				&pinctrl RZG2L_GPIO(40, 2) GPIO_ACTIVE_HIGH>;			
+		col-gpios = <	&pinctrl RZG2L_GPIO(12, 1) GPIO_ACTIVE_HIGH //IRQ7
+				&pinctrl RZG2L_GPIO(13, 0) GPIO_ACTIVE_HIGH //IRQ4
+				&pinctrl RZG2L_GPIO(13, 1) GPIO_ACTIVE_HIGH //IRQ5
+				&pinctrl RZG2L_GPIO(13, 2) GPIO_ACTIVE_HIGH>;			
 
 		linux,keymap = <0x0000009A      // VOL UP /
 				0x00010099      // VOL DN /
@@ -183,93 +192,92 @@
 	       	compatible = "gpio-leds"; 
 
 	       	//pinctrl-names = "default";
-       		//pinctrl-0 = <&tca6424>;
 
 	       	mute_led {
 		   	label = "mute_led";
-		   	gpios = <&tca6424 2 GPIO_ACTIVE_HIGH>; // Bank 4, pin 1 
+		   	gpios = <&pinctrl RZG2L_GPIO(42, 2) GPIO_ACTIVE_HIGH>; // Bank 4, pin 1 
 		   	default-state = "off";	   
 	       	};
 	       
 	       	captions_led {
 		   	label = "captions_led";
-		   	gpios = <&tca6424 1 GPIO_ACTIVE_HIGH>; // Bank 4, pin 2 
+		   	gpios = <&pinctrl RZG2L_GPIO(42, 3) GPIO_ACTIVE_HIGH>; // Bank 4, pin 2 
 		   	default-state = "off";
 	       	};
 
 	       	keypad_led {
 		   	label = "keypad_led";
-		   	gpios = <&tca6424 9 GPIO_ACTIVE_HIGH>; // Bank 4, pin 3 
+		   	gpios = <&pinctrl RZG2L_GPIO(42, 4) GPIO_ACTIVE_HIGH>; // Bank 4, pin 3 
 		   	default-state = "off";
    	    	};
 
 		vol6_led {
 		   	label = "vol6_led";
-		   	gpios = <&tca6424 8 GPIO_ACTIVE_HIGH>; // Bank 4, pin 4 
+		   	gpios = <&pinctrl RZG2L_GPIO(19, 0) GPIO_ACTIVE_HIGH>; // Bank 4, pin 4 
 		   	default-state = "off";
 		   	//linux,default-trigger = "timer";
 	       	};
 
 		vol5_led {
 		   	label = "vol5_led";
-		   	gpios = <&tca6424 7 GPIO_ACTIVE_HIGH>; // Bank 4, pin 5 
+		   	gpios = <&pinctrl RZG2L_GPIO(19, 1) GPIO_ACTIVE_HIGH>; // Bank 4, pin 5 
 		   	default-state = "off";
 		   	//linux,default-trigger = "timer";
 	       	};
 
 		vol4_led {
 		   	label = "vol4_led";
-		   	gpios = <&tca6424 6 GPIO_ACTIVE_HIGH>; // Bank 4, pin 6 
+		   	gpios = <&pinctrl RZG2L_GPIO(44, 0) GPIO_ACTIVE_HIGH>; // Bank 4, pin 6 
 		   	default-state = "off";
 		   	//linux,default-trigger = "timer";
 	       	};
 		
 		vol3_led {
 		   	label = "vol3_led";
-		   	gpios = <&tca6424 5 GPIO_ACTIVE_HIGH>; // Bank 4, pin 7 
+		   	gpios = <&pinctrl RZG2L_GPIO(44, 3) GPIO_ACTIVE_HIGH>; // Bank 4, pin 7 
 		   	default-state = "off";
 		   	//linux,default-trigger = "timer";
 	       	};
 
 		vol2_led {
 		   	label = "vol2_led";
-		   	gpios = <&tca6424 4 GPIO_ACTIVE_HIGH>; // Bank 4, pin 8 
+		   	gpios = <&pinctrl RZG2L_GPIO(45, 2) GPIO_ACTIVE_HIGH>; // Bank 4, pin 8 
 		   	default-state = "off";
 		   	//linux,default-trigger = "timer";
 	       	};
 
 		vol1_led {
 		   	label = "vol1_led";
-		   	gpios = <&tca6424 3 GPIO_ACTIVE_HIGH>; // Bank 4, pin 9 
+		   	gpios = <&pinctrl RZG2L_GPIO(45, 3) GPIO_ACTIVE_HIGH>; // Bank 4, pin 9 
 		   	default-state = "off";
 		   	//linux,default-trigger = "timer";
 	       	};
 
 	       	spkr_led {
 		   	label = "spkr_led";
-		   	gpios = <&tca6424 0 GPIO_ACTIVE_HIGH>;  // Bank 4, pin 10 
+		   	gpios = <&pinctrl RZG2L_GPIO(7, 0) GPIO_ACTIVE_HIGH>;  // Bank 4, pin 10 
 		   	default-state = "off";
 		};
 		
 		RingFlasher {
 			label = "RingFlasher";
-	   		gpios = <&tca6424 15 GPIO_ACTIVE_HIGH>;  // Bank 4, pin 21 
+	   		gpios = <&pinctrl RZG2L_GPIO(8, 1) GPIO_ACTIVE_HIGH>;  // Bank 4, pin 21 
 	   		default-state = "off";
 	   		//linux,default-trigger = "timer";
 	   		//flash-max-timeout-us = <1000000>;
 		};
 		
 		//temporary!!!!!!!!!!!!!!!!
-		TouchReset {
+		/*TouchReset {
 			label = "Touch Screen Reset";
-			gpios = <&tca6424 12 GPIO_ACTIVE_LOW>;
+			gpios = <&pinctrl RZG2L_GPIO(42, 3) GPIO_ACTIVE_LOW>;
 			default-state = "off";
-		};
+		};*/
 		
 		//temporary!!!!!!!!!!!!!!!!
 		/*LCDBacklight {
 			label = "Display Backlight";
-			gpios = <&tca6424 13 GPIO_ACTIVE_HIGH>;
+			gpios = <&pinctrl RZG2L_GPIO(42, 3)GPIO_ACTIVE_HIGH>;
 			default-state = "on";
 		};*/
    	};
@@ -362,44 +370,9 @@
 
 &i2c0 {
 	pinctrl-0 = <&i2c0_pins>;
-	pinctrl-names = "default";
-	status = "okay";
-};
-
-&i2c1 {
-	status = "okay";
-
-	gt911@5d {
-		compatible = "goodix,gt911";
-		reg = <0x5d>;
-		interrupt-parent = <&pinctrl>;
-		interrupts = <RZG2L_GPIO(5, 2) IRQ_TYPE_EDGE_FALLING>;
-		irq-gpios = <&pinctrl RZG2L_GPIO(5, 2) GPIO_ACTIVE_LOW>;
-		reset-gpios = <&tca6424 14 GPIO_ACTIVE_LOW>;	
-		AVDD28-supply = <&reg_3p3v>;
-		VDDIO-supply = <&reg_3p3v>;
-		touchscreen-size-x = <1024>;
-		touchscreen-size-y = <600>;	
-		status = "okay";
-      	};
-      	
-      	/*tsc2007@49 {
-		compatible = "ti,tsc2007";
-		reg = <0x49>;
-		interrupt-parent = <&pinctrl>;
-		interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
-		gpios = <&pinctrl RZG2L_GPIO(5, 2) GPIO_ACTIVE_LOW>;
-		ti,x-plate-ohms = <180>;
-	};*/
-	
-	//add digital POT
-};
-
-&i2c3 {
-	status = "okay";
 	//pinctrl-names = "default";
-	//pinctrl-0 = <&i2c3_pins>;
-
+	//status = "okay";
+	
 	tlv320aic3106: tlv320aic3106@18 {
 		#sound-dai-cells = <0>;
 		compatible = "ti,tlv320aic3106";
@@ -407,7 +380,7 @@
 		status = "okay";
 		ai3x-micbias-vg = <1>;
 		ai3x-ocmv = <2>;
-		reset-gpios = <&pinctrl RZG2L_GPIO(43, 2) GPIO_ACTIVE_LOW>;
+		reset-gpios = <&pinctrl RZG2L_GPIO(10, 0) GPIO_ACTIVE_LOW>;
 		
 		AVDD-supply = <&reg_3p3v>;
 		IOVDD-supply = <&reg_1p8v>;
@@ -444,39 +417,41 @@
 		//clock-divider-read-only = <1>, <1>, <1>, <1>, <1>;
 		clock-flags = <2176>, <2176>, <2176>, <2052>, <2176>, <2048>;
 	};
+};
+
+&i2c1 {
+	status = "okay";
+
+	gt911@5d {
+		compatible = "goodix,gt911";
+		reg = <0x5d>;
+		interrupt-parent = <&pinctrl>;
+		interrupts = <RZG2L_GPIO(3, 0) IRQ_TYPE_EDGE_FALLING>;
+		irq-gpios = <&pinctrl RZG2L_GPIO(3, 0) GPIO_ACTIVE_LOW>;
+		reset-gpios = <&pinctrl RZG2L_GPIO(8, 2) GPIO_ACTIVE_LOW>;	
+		AVDD28-supply = <&reg_3p3v>;
+		VDDIO-supply = <&reg_3p3v>;
+		touchscreen-size-x = <1024>;
+		touchscreen-size-y = <600>;	
+		status = "okay";
+      	};
+      	
+      	/*tsc2007@49 {
+		compatible = "ti,tsc2007";
+		reg = <0x49>;
+		interrupt-parent = <&pinctrl>;
+		interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
+		gpios = <&pinctrl RZG2L_GPIO(5, 2) GPIO_ACTIVE_LOW>;
+		ti,x-plate-ohms = <180>;
+	};*/
 	
-	//NOTE to find the driver for this look for PCA953x
-	tca6424: tca6424@22 {
-		compatible = "ti,tca6424";
-		reg = <0x22>;
-		gpio-controller;
-		#gpio-cells = <2>;
-		gpio-line-names =
-			"SPKR_LED", 	//p0 = 0
-			"CAPTIONS_LED", //p1 = 1
-			"MUTE_LED", 	//p2 = 2
-			"VOL1_LED", 	//p3 = 3
-			"VOL2_LED", 	//p4 = 4
-			"VOL3_LED", 	//p5 = 5
-			"VOL4_LED",	//p6 = 6
-			"VOL5_LED", 	//p7 = 7
-			"VOL6_LED", 	//p10 = 8
-			"KEYPAD_LED", 	//p11 = 9
-			"unused1", 	//p12 = 10
-			"unused2", 	//p13 = 11
-			"TOUCH_RESET", 	//p14 = 12
-			"BACKLIGHT_EN",	//p15 = 13
-			"unused3", 	//p16 = 14
-			"FLASHER_LEDS",	//p17 = 15
-			"unused4", 	//p20 = 16
-			"unused5", 	//p21 = 17
-			"unused6", 	//p22 = 18
-			"unused7", 	//p23 = 19
-			"unused8", 	//p24 = 20
-			"LINE_IN_USE", 	//p25 = 21
-			"LOOP_DETECT",	//p26 = 22
-			"POLARITY";	//p27 = 23			
-	    };
+	//add digital POT
+};
+
+&i2c3 {
+	status = "okay";
+	//pinctrl-names = "default";
+	//pinctrl-0 = <&i2c3_pins>;		
 };
 
 &ohci0 { //USB

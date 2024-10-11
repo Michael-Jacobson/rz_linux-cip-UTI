@@ -30,6 +30,7 @@
 #if (MTU3_PWM_SUPPORT || MTU3_PHASE_COUNTING_SUPPORT)
 	mtu3_pins: mtu3 {
 		pinmux =
+		        //<RZG2L_PORT_PINMUX(9, 0, 4)>, /* MTIOC2A */
 #if MTU3_PHASE_COUNTING_SUPPORT
 			<RZG2L_PORT_PINMUX(48, 0, 4)>, /* MTCLKA */
 #if (!MTU3_PWM_SUPPORT)
@@ -137,53 +138,6 @@
 	usb1_pins: usb1 {
 		pinmux = <RZG2L_PORT_PINMUX(42, 0, 1)>, /* VBUS */
 			 <RZG2L_PORT_PINMUX(42, 1, 1)>; /* OVC */
-	};
-	
-	/*du_pins: du {
-		groups = "disp_bgr888", "disp_sync", "disp_de", "disp_clk";
-		function = "disp";
-		data {
-			pinmux = <RZG2L_PORT_PINMUX(7, 2, 1)>,
-				 <RZG2L_PORT_PINMUX(8, 0, 1)>,
-				 <RZG2L_PORT_PINMUX(8, 1, 1)>,
-				 <RZG2L_PORT_PINMUX(8, 2, 1)>,
-				 <RZG2L_PORT_PINMUX(9, 0, 1)>,
-				 <RZG2L_PORT_PINMUX(9, 1, 1)>,
-				 <RZG2L_PORT_PINMUX(10, 0, 1)>,
-				 <RZG2L_PORT_PINMUX(10, 1, 1)>,
-				 <RZG2L_PORT_PINMUX(11, 0, 1)>,
-				 <RZG2L_PORT_PINMUX(11, 1, 1)>,
-				 <RZG2L_PORT_PINMUX(12, 0, 1)>,
-				 <RZG2L_PORT_PINMUX(12, 1, 1)>,
-				 <RZG2L_PORT_PINMUX(13, 0, 1)>,
-				 <RZG2L_PORT_PINMUX(13, 1, 1)>,
-				 <RZG2L_PORT_PINMUX(13, 2, 1)>,
-				 <RZG2L_PORT_PINMUX(14, 0, 1)>,
-				 <RZG2L_PORT_PINMUX(14, 1, 1)>,
-				 <RZG2L_PORT_PINMUX(15, 0, 1)>,
-				 <RZG2L_PORT_PINMUX(15, 1, 1)>,
-				 <RZG2L_PORT_PINMUX(16, 0, 1)>,
-				 <RZG2L_PORT_PINMUX(16, 1, 1)>,
-				 <RZG2L_PORT_PINMUX(17, 0, 1)>,
-				 <RZG2L_PORT_PINMUX(17, 1, 1)>,
-				 <RZG2L_PORT_PINMUX(17, 2, 1)>;
-			drive-strength = <2>;
-		};
-
-		sync {
-			pinmux = <RZG2L_PORT_PINMUX(6, 1, 1)>, // HSYNC 
-				 <RZG2L_PORT_PINMUX(7, 0, 1)>; // VSYNC 
-			drive-strength = <2>;
-		};
-
-		de {
-			pinmux = <RZG2L_PORT_PINMUX(7, 1, 1)>; // DE 
-			drive-strength = <2>;
-		};
-
-		clk {
-			pinmux = <RZG2L_PORT_PINMUX(6, 0, 1)>; // CLK 
-		};
-	};*/
+	};	
 };
 

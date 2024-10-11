@@ -13,6 +13,6 @@
 #include "rzg2l-UTI-Carrier.dtsi"
 
 / {
-	model = "Ultratec 2400i next Gen prototype based on r9a07g044l2";
+	model = "Ultratec 2400i next Gen prototype on Custom Board";
 	compatible = "renesas,smarc-evk", "renesas,r9a07g044l2", "renesas,r9a07g044";
 };
