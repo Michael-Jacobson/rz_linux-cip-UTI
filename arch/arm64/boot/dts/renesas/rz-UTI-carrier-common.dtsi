@@ -408,9 +408,9 @@
 				   <&versa3 3>,
 				   <&versa3 4>,
 				   <&versa3 5>;
-		assigned-clock-rates =	<12288000>, //AUDIO_CLK2
-					<25000000>, // Ethernet Phy
-					<12000000>, //unused
+		assigned-clock-rates =	<0>, //unused
+					<0>, //unused
+					<25000000>, //Ethernet Phy
 					<12288000>, //AUDIO_MCK
 					<12288000>, //AUDIO_CLK1
 					<24000000>; //Ref
