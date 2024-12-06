@@ -96,9 +96,9 @@
 			power-source = <1800>;
 		};
 
-		sd1_mux_uhs {
-			pinmux = <RZG2L_PORT_PINMUX(19, 0, 1)>; /* SD1_CD */
-		};
+		/*sd1_mux_uhs {
+			pinmux = <RZG2L_PORT_PINMUX(19, 0, 1)>; // SD1_CD 
+		};*/
 	};
 
 	sound_clk_pins: sound_clk {

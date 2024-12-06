@@ -193,9 +193,9 @@
 };
 
 &pinctrl {
-	adc_pins: adc {
-		pinmux = <RZG2L_PORT_PINMUX(9, 0, 2)>; /* ADC_TRG */
-	};
+	/*adc_pins: adc {
+		pinmux = <RZG2L_PORT_PINMUX(9, 0, 2)>; // ADC_TRG 
+	};*/
 
 	eth0_pins: eth0 {
 		pinmux = <RZG2L_PORT_PINMUX(28, 1, 1)>, /* ET0_LINKSTA */
