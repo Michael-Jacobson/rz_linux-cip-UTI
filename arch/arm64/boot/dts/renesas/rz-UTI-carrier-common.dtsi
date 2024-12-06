@@ -41,11 +41,11 @@
 		clock-frequency = <24000000>;
 	};
 	
-	lcd_bl: backlight {
+	/*lcd_bl: backlight {
 		compatible = "gpio-backlight";
 		gpios = <&pinctrl RZG2L_GPIO(9, 0) GPIO_ACTIVE_HIGH>;
 		default-on;
-	};
+	};*/
 	
         /*lcd_bl: backlight {
 		compatible = "pwm-backlight";
@@ -275,11 +275,11 @@
 		};
 		
 		//temporary!!!!!!!!!!!!!!!!
-		/*LCDBacklight {
+		LCDBacklight {
 			label = "Display Backlight";
-			gpios = <&pinctrl RZG2L_GPIO(42, 3)GPIO_ACTIVE_HIGH>;
+			gpios = <&pinctrl RZG2L_GPIO(9, 0)GPIO_ACTIVE_HIGH>;
 			default-state = "on";
-		};*/
+		};
    	};
    
 
@@ -532,7 +532,7 @@
 				         */
 	        panel-width-mm = <68>;
 	        panel-height-mm = <121>;
-	        backlight = <&lcd_bl>;
+	        //backlight = <&lcd_bl>;
 	        status = "okay";
 
 	        display-timings { //kernel
