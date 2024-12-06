@@ -88,9 +88,6 @@
 				core0 {
 					cpu = <&cpu0>;
 				};
-				core1 {
-					cpu = <&cpu1>;
-				};
 			};
 		};
 
@@ -99,16 +96,6 @@
 			reg = <0>;
 			device_type = "cpu";
 			#cooling-cells = <2>;
-			next-level-cache = <&L3_CA55>;
-			enable-method = "psci";
-			clocks = <&cpg CPG_CORE R9A07G044_CLK_I>;
-			operating-points-v2 = <&cluster0_opp>;
-		};
-
-		cpu1: cpu@100 {
-			compatible = "arm,cortex-a55";
-			reg = <0x100>;
-			device_type = "cpu";
 			next-level-cache = <&L3_CA55>;
 			enable-method = "psci";
 			clocks = <&cpg CPG_CORE R9A07G044_CLK_I>;
@@ -1596,7 +1583,7 @@
 			polling-delay = <1000>;
 			on-temperature = <110000>;
 			off-temperature = <95000>;
-			target_cpus =   <&cpu1>;
+			target_cpus =   <&cpu0>;
 			status = "disabled";
 		};
 
