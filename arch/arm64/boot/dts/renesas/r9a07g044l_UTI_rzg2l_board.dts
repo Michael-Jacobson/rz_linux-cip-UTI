@@ -14,5 +14,5 @@
 
 / {
 	model = "Ultratec 2400i next Gen prototype on Custom Board";
-	compatible = "renesas,smarc-evk", "renesas,r9a07g044l2", "renesas,r9a07g044";
+	compatible = "renesas,smarc-evk", "renesas,r9a07g044l1", "renesas,r9a07g044";
 };
