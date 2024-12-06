@@ -315,7 +315,7 @@
 
 		sound0_master: simple-audio-card,codec {
 			sound-dai = <&tlv320aic3106>;
-			clocks = <&versa3 3>;
+			clocks = <&versa3 2>;
 			//clocks = <&audio_mstrclk>;
 			system-clock-frequency = <12288000>;
 		};
