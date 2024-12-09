@@ -415,11 +415,11 @@
 				   <&versa3 4>,
 				   <&versa3 5>;
 		assigned-clock-rates =	<24000000>, //REF
-					<25000000>, //SE1 - AUDIO_CLK1
-					<25000000>, //SE2 - AUDIO_MCK
+					<12288000>, //SE1 - AUDIO_CLK1
+					<12288000>, //SE2 - AUDIO_MCK
 					<25000000>, //SE3 - ETHERNET 
-					<25000000>, //DIFF1 - unused
-					<25000000>; //DIFF2
+					<24000000>, //DIFF1 - unused
+					<24000000>; //DIFF2 - unused
 					/*
 					<0>, //unused
 					<0>, //unused
