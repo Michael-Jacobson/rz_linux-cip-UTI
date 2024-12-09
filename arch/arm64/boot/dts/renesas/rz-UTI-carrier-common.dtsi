@@ -267,6 +267,12 @@
 	   		//flash-max-timeout-us = <1000000>;
 		};
 		
+		HookSwControl {
+		        label = "HookSwControl";
+		   	gpios = <&pinctrl RZG2L_GPIO(9, 1) GPIO_ACTIVE_LOW>;  // Bank 4, pin 10 
+		   	default-state = "off";
+		};
+		
 		//temporary!!!!!!!!!!!!!!!!
 		TouchReset {
 			label = "Touch Screen Reset";
@@ -408,12 +414,20 @@
 				   <&versa3 3>,
 				   <&versa3 4>,
 				   <&versa3 5>;
-		assigned-clock-rates =	<0>, //unused
+		assigned-clock-rates =	<24000000>, //REF
+					<12288000>, //SE1 - AUDIO_CLK1
+					<12288000>, //SE2 - AUDIO_MCK
+					<25000000>, //SE3 - ETHERNET 
+					<0>, //DIFF1 - unused
+					<0>; //DIFF2
+					/*
+					<0>, //unused
 					<0>, //unused
 					<25000000>, //Ethernet Phy
 					<12288000>, //AUDIO_MCK
 					<12288000>, //AUDIO_CLK1
 					<24000000>; //Ref
+					*/
 		//clock-divider-read-only = <1>, <1>, <1>, <1>, <1>;
 		clock-flags = <2176>, <2176>, <2176>, <2052>, <2176>, <2048>;
 	};
