@@ -315,7 +315,7 @@
 
 		cpu_dai: simple-audio-card,cpu {
 			sound-dai = <&ssi0>;
-			clocks = <&versa3 0>;
+			clocks = <&versa3 1>;
 			system-clock-frequency = <12288000>;
 		};
 

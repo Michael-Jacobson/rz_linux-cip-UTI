@@ -116,10 +116,10 @@
 #endif
 
 	ssi0_pins: ssi0 {
-		pinmux = <RZG2L_PORT_PINMUX(35, 0, 1)>, /* BCK */
-			 <RZG2L_PORT_PINMUX(35, 1, 1)>, /* RCK */
-			 <RZG2L_PORT_PINMUX(36, 0, 1)>, /* TXD */
-			 <RZG2L_PORT_PINMUX(36, 1, 1)>; /* RXD */
+		pinmux = <RZG2L_PORT_PINMUX(35, 0, 3)>, /* BCK */
+			 <RZG2L_PORT_PINMUX(35, 1, 3)>, /* RCK */
+			 <RZG2L_PORT_PINMUX(36, 0, 3)>, /* TXD */
+			 <RZG2L_PORT_PINMUX(36, 1, 3)>; /* RXD */
 	};
 
 	ssi1_pins: ssi1 {
