@@ -401,11 +401,11 @@
 		clocks = <&x1_clk>;
 		clock-names = "x1";
 		
-		renesas,settings = [
+		/*renesas,settings = [
 			80 00 11 19 4c 02 23 7f 83 19 08 a9 5f 25 24 bf
 			00 14 7a e1 00 00 00 00 01 55 59 bb 3f 30 90 b6
 			80 b0 45 c4 95
-		];
+		];*/
 		
 		//0 - REF, 1 - SE1, 2 - SE2, 3 - SE3, 4 - DIFF1, 5 - DIFF2.
 		assigned-clocks = <&versa3 0>,
@@ -428,7 +428,7 @@
 					<12288000>, //AUDIO_CLK1
 					<24000000>; //Ref
 					*/
-		clock-divider-read-only = <1>, <1>, <1>, <1>, <1>;
+		//clock-divider-read-only = <1>, <1>, <1>, <1>, <1>;
 		clock-flags = <2176>, <2176>, <2176>, <2052>, <2176>, <2048>;
 	};
 };
