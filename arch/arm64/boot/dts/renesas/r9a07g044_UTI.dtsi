@@ -930,7 +930,7 @@
 				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
 			interrupt-names = "mux", "fil", "arp_ns";
-			phy-mode = "rgmii";
+			phy-mode = "mii";
 			clocks = <&cpg CPG_MOD R9A07G044_ETH0_CLK_AXI>,
 				 <&cpg CPG_MOD R9A07G044_ETH0_CLK_CHI>,
 				 <&cpg CPG_CORE R9A07G044_CLK_HP>;
