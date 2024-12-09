@@ -148,7 +148,7 @@
 	pinctrl-0 = <&eth0_pins>;
 	pinctrl-names = "default";
 	phy-handle = <&phy0>;
-	phy-mode = "mii";
+	phy-mode = "gmii-id";
 	status = "okay";
 	
 	local-mac-address = [00 1B C4 03 D0 8F];
