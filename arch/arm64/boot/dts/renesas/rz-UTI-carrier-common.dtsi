@@ -41,11 +41,11 @@
 		clock-frequency = <24000000>;
 	};
 	
-	/*lcd_bl: backlight {
+	lcd_bl: backlight {
 		compatible = "gpio-backlight";
 		gpios = <&pinctrl RZG2L_GPIO(9, 0) GPIO_ACTIVE_HIGH>;
 		default-on;
-	};*/
+	};
 	
         /*lcd_bl: backlight {
 		compatible = "pwm-backlight";
@@ -54,24 +54,24 @@
 		default-brightness-level = <10>;
 	};*/
 	
-	/*gpio-keys { //this is for input GPIOs only
+	gpio-keys { //this is for input GPIOs only
 		compatible = "gpio-keys";
 		#address-cells = <1>;
 		#size-cells = <0>;
 		autorepeat;
 
-		HookSwitchOffhook {
+		HookSwitch {
 			label = "Handset Offhook";
-			linux,code = <0x88>;
+			linux,code = <0x07>;
 			//wakeup-source;
             		interrupt-parent = <&pinctrl>;
             		interrupts = <RZG2L_GPIO(3, 1) IRQ_TYPE_EDGE_FALLING>;
 			debounce-interval = <10>; 
 		};
 		
-		RingDetectHigh {
+		RingDetect {
 			label = "RingDetect"; 
-			linux,code = <0x8B>;
+			linux,code = <0x08>;
 			//wakeup-source;
             		interrupt-parent = <&pinctrl>;
             		interrupts = <RZG2L_GPIO(2, 1) IRQ_TYPE_EDGE_FALLING>;
@@ -81,6 +81,7 @@
 		LineInUse {
 			label = "LineInUse"; 
 			linux,code = <0x09>;
+			interrupt-parent = <&pinctrl>;
 			debounce-interval = <1>;
 			interrupts = <RZG2L_GPIO(48, 4) IRQ_TYPE_EDGE_FALLING>;
 		};
@@ -88,12 +89,13 @@
 		LoopDetect {
 			label = "LoopDetect"; 
 			linux,code = <0x0A>;
+			interrupt-parent = <&pinctrl>;
 			debounce-interval = <1>;
 			interrupts = <RZG2L_GPIO(48, 2) IRQ_TYPE_EDGE_FALLING>;
 		};
-	};*/
+	};
 	
-	gpio-keys-polled { //this is for input GPIOs only
+	/*gpio-keys-polled { //this is for input GPIOs only
 		compatible = "gpio-keys-polled";
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -135,10 +137,10 @@
 			linux,input-type = <5>; //EV_SW
 			gpios = <&pinctrl RZG2L_GPIO(48, 2) GPIO_ACTIVE_HIGH>;
 		};
-	};
+	};*/
 	
 	
-	/*matrix_keypad: matrix_keypad0 {
+	matrix_keypad: matrix_keypad0 {
 		compatible = "gpio-matrix-keypad";  
 		debounce-delay-ms = <5>;
 		col-scan-delay-us = <2>;
@@ -157,9 +159,9 @@
 				&pinctrl RZG2L_GPIO(2, 0) GPIO_ACTIVE_HIGH
 				&pinctrl RZG2L_GPIO(2, 1) GPIO_ACTIVE_HIGH>;
 
-		col-gpios = <	&pinctrl RZG2L_GPIO(12, 1) GPIO_ACTIVE_HIGH //IRQ7
-				&pinctrl RZG2L_GPIO(13, 0) GPIO_ACTIVE_HIGH //IRQ4
-				&pinctrl RZG2L_GPIO(13, 1) GPIO_ACTIVE_HIGH //IRQ5
+		col-gpios = <	&pinctrl RZG2L_GPIO(12, 1) GPIO_ACTIVE_HIGH 
+				&pinctrl RZG2L_GPIO(13, 0) GPIO_ACTIVE_HIGH 
+				&pinctrl RZG2L_GPIO(13, 1) GPIO_ACTIVE_HIGH 
 				&pinctrl RZG2L_GPIO(13, 2) GPIO_ACTIVE_HIGH>;			
 
 		linux,keymap = <0x0000009A      // VOL UP /
@@ -186,7 +188,7 @@
 				0x040100B0      // DTMF0 /
 				0x040200BB      // DTMF# /
 				0x04030097>;      // MUTE /
-	};*/
+	};
 	
 	leds {
 	       	compatible = "gpio-leds"; 
@@ -281,11 +283,11 @@
 		};
 		
 		//temporary!!!!!!!!!!!!!!!!
-		LCDBacklight {
+		/*LCDBacklight {
 			label = "Display Backlight";
 			gpios = <&pinctrl RZG2L_GPIO(9, 0)GPIO_ACTIVE_HIGH>;
 			default-state = "on";
-		};
+		};*/
    	};
    
 
@@ -546,7 +548,7 @@
 				         */
 	        panel-width-mm = <68>;
 	        panel-height-mm = <121>;
-	        //backlight = <&lcd_bl>;
+	        backlight = <&lcd_bl>;
 	        status = "okay";
 
 	        display-timings { //kernel
