@@ -64,7 +64,7 @@
 			label = "Handset Offhook";
 			linux,code = <0x07>;
 			//wakeup-source;
-            		interrupt-parent = <&intc_ex>;
+            		interrupt-parent = <&pinctrl>;
             		interrupts = <RZG2L_GPIO(3, 1) IRQ_TYPE_EDGE_FALLING>;
 			debounce-interval = <10>; 
 		};
@@ -73,7 +73,7 @@
 			label = "RingDetect"; 
 			linux,code = <0x08>;
 			//wakeup-source;
-            		interrupt-parent = <&intc_ex>;
+            		interrupt-parent = <&pinctrl>;
             		interrupts = <RZG2L_GPIO(2, 1) IRQ_TYPE_EDGE_FALLING>;
 			debounce-interval = <1>;
 		};
@@ -81,7 +81,7 @@
 		LineInUse {
 			label = "LineInUse"; 
 			linux,code = <0x09>;
-			interrupt-parent = <&intc_ex>;
+			interrupt-parent = <&pinctrl>;
 			debounce-interval = <1>;
 			interrupts = <RZG2L_GPIO(48, 4) IRQ_TYPE_EDGE_FALLING>;
 		};
@@ -89,7 +89,7 @@
 		LoopDetect {
 			label = "LoopDetect"; 
 			linux,code = <0x0A>;
-			interrupt-parent = <&intc_ex>;
+			interrupt-parent = <&pinctrl>;
 			debounce-interval = <1>;
 			interrupts = <RZG2L_GPIO(48, 2) IRQ_TYPE_EDGE_FALLING>;
 		};
@@ -148,7 +148,7 @@
 		//pinctrl-names = "default";
 		//pinctrl-0 = <&gpio_matrix_keyboard_rows &gpio_matrix_keyboard_cols>;
 		
-		pinctrl-0 = <&keyboard_pins>;
+		pinctrl-0 = <&pinctrl>;
 
 		//gpio-activelow;
 		//linux,wakeup;
