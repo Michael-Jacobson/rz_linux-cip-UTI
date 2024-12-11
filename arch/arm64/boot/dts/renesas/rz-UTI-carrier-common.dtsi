@@ -58,13 +58,13 @@
 		compatible = "gpio-keys";
 		#address-cells = <1>;
 		#size-cells = <0>;
-		autorepeat;
+		//autorepeat;
 
 		HookSwitch {
 			label = "Handset Offhook";
 			linux,code = <0x07>;
 			//wakeup-source;
-            		interrupt-parent = <&pinctrl>;
+            		interrupt-parent = <&intc_ex>;
             		interrupts = <RZG2L_GPIO(3, 1) IRQ_TYPE_EDGE_FALLING>;
 			debounce-interval = <10>; 
 		};
@@ -73,7 +73,7 @@
 			label = "RingDetect"; 
 			linux,code = <0x08>;
 			//wakeup-source;
-            		interrupt-parent = <&pinctrl>;
+            		interrupt-parent = <&intc_ex>;
             		interrupts = <RZG2L_GPIO(2, 1) IRQ_TYPE_EDGE_FALLING>;
 			debounce-interval = <1>;
 		};
@@ -81,7 +81,7 @@
 		LineInUse {
 			label = "LineInUse"; 
 			linux,code = <0x09>;
-			interrupt-parent = <&pinctrl>;
+			interrupt-parent = <&intc_ex>;
 			debounce-interval = <1>;
 			interrupts = <RZG2L_GPIO(48, 4) IRQ_TYPE_EDGE_FALLING>;
 		};
@@ -89,7 +89,7 @@
 		LoopDetect {
 			label = "LoopDetect"; 
 			linux,code = <0x0A>;
-			interrupt-parent = <&pinctrl>;
+			interrupt-parent = <&intc_ex>;
 			debounce-interval = <1>;
 			interrupts = <RZG2L_GPIO(48, 2) IRQ_TYPE_EDGE_FALLING>;
 		};
@@ -144,7 +144,7 @@
 		compatible = "gpio-matrix-keypad";  
 		debounce-delay-ms = <5>;
 		col-scan-delay-us = <2>;
-		interrupt-parent = <&pinctrl>;
+		interrupt-parent = <&intc_ex>;
 		//pinctrl-names = "default";
 		//pinctrl-0 = <&gpio_matrix_keyboard_rows &gpio_matrix_keyboard_cols>;
 		
@@ -607,4 +607,8 @@
 
 &mtu3 {
 	status = "okay";
+};
+
+&intc_ex {
+    status = "okay";
 };
