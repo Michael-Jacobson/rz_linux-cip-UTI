@@ -80,12 +80,11 @@
 			debounce-interval = <1>;
 		};
 		
-		LineInUse {
+		/*LineInUse {
 			label = "LineInUse"; 
 			linux,code = <0x09>;
 			interrupt-parent = <&pinctrl>;
 			debounce-interval = <1>;
-			linux,input-type = <5>; //EV_SW
 			interrupts = <RZG2L_GPIO(48, 4) IRQ_TYPE_LEVEL_LOW>;
 		};
 		
@@ -94,35 +93,16 @@
 			linux,code = <0x0A>;
 			interrupt-parent = <&pinctrl>;
 			debounce-interval = <1>;
-			linux,input-type = <5>; //EV_SW
 			interrupts = <RZG2L_GPIO(48, 2) IRQ_TYPE_EDGE_FALLING>;
-		};
+		};*/
 	};
 	
-	/*gpio-keys-polled { //this is for input GPIOs only
+	gpio-keys-polled { //this is for input GPIOs only
 		compatible = "gpio-keys-polled";
 		#address-cells = <1>;
 		#size-cells = <0>;
 		poll-interval = <1>; //milliseconds
-		autorepeat;
-		
-		HookSwitch {
-			label = "Handset Offhook";
-			//linux,code = <0x88>;
-			linux,code = <0x07>;
-			debounce-interval = <10>; //The max debounce value is ??
-			linux,input-type = <5>; //EV_SW
-			gpios = <&pinctrl RZG2L_GPIO(3, 1) GPIO_ACTIVE_HIGH>;
-		};	
-		
-		RingDetect {
-			label = "RingDetect"; 
-			//linux,code = <0x8B>;
-			linux,code = <0x08>;
-			//debounce-interval = <1>;
-			linux,input-type = <5>; //EV_SW
-			gpios = <&pinctrl RZG2L_GPIO(2, 1) GPIO_ACTIVE_LOW>;
-		};
+		autorepeat;		
 		
 		LineInUse {
 			label = "LineInUse"; 
@@ -141,15 +121,15 @@
 			linux,input-type = <5>; //EV_SW
 			gpios = <&pinctrl RZG2L_GPIO(48, 2) GPIO_ACTIVE_HIGH>;
 		};
-	};*/
+	};
 		
 	
-	matrix_keypad: matrix_keypad0 {
+	/*matrix_keypad: matrix_keypad0 {
 		compatible = "gpio-matrix-keypad";  
 		debounce-delay-ms = <5>;
 		col-scan-delay-us = <2>;
-		//interrupt-parent = <&pinctrl>;
-		interrupt-parent = <&intc_ex>;
+		interrupt-parent = <&pinctrl>;
+		//interrupt-parent = <&intc_ex>;
 		//pinctrl-names = "default";
 		
 		pinctrl-0 = <&keyboard_pins>;
@@ -157,17 +137,11 @@
 		//gpio-activelow;
 		//linux,wakeup;
 
-		/*row-gpios = <	&pinctrl RZG2L_GPIO(0, 0) GPIO_ACTIVE_LOW
+		row-gpios = <	&pinctrl RZG2L_GPIO(0, 0) GPIO_ACTIVE_LOW
 				&pinctrl RZG2L_GPIO(0, 1) GPIO_ACTIVE_LOW 
 				&pinctrl RZG2L_GPIO(1, 0) GPIO_ACTIVE_LOW
 				&pinctrl RZG2L_GPIO(1, 1) GPIO_ACTIVE_LOW
-				&pinctrl RZG2L_GPIO(2, 0) GPIO_ACTIVE_LOW>;*/
-				
-		row-gpios = <	&intc_ex 0 GPIO_ACTIVE_LOW
-				&intc_ex 1 GPIO_ACTIVE_LOW 
-				&intc_ex 2 GPIO_ACTIVE_LOW
-				&intc_ex 3 GPIO_ACTIVE_LOW
-				&intc_ex 4 GPIO_ACTIVE_LOW>;
+				&pinctrl RZG2L_GPIO(2, 0) GPIO_ACTIVE_LOW>;
 
 		col-gpios = <	&pinctrl RZG2L_GPIO(12, 1) GPIO_ACTIVE_HIGH 
 				&pinctrl RZG2L_GPIO(13, 0) GPIO_ACTIVE_HIGH 
@@ -199,7 +173,7 @@
 				0x040200BB      // DTMF# /
 				0x04030097>;      // MUTE /
 	};
-	
+	*/
 	leds {
 	       	compatible = "gpio-leds"; 
 
@@ -286,11 +260,11 @@
 		};
 		
 		//temporary!!!!!!!!!!!!!!!!
-		TouchReset {
+		/*TouchReset {
 			label = "Touch Screen Reset";
 			gpios = <&pinctrl RZG2L_GPIO(8, 2) GPIO_ACTIVE_LOW>;
 			default-state = "off";
-		};
+		};*/
 		
 		//temporary!!!!!!!!!!!!!!!!
 		/*LCDBacklight {
@@ -454,7 +428,7 @@
 		interrupt-parent = <&pinctrl>;
 		interrupts = <RZG2L_GPIO(3, 0) IRQ_TYPE_EDGE_FALLING>;
 		irq-gpios = <&pinctrl RZG2L_GPIO(3, 0) GPIO_ACTIVE_LOW>;
-		//reset-gpios = <&pinctrl RZG2L_GPIO(8, 2) GPIO_ACTIVE_LOW>;	
+		reset-gpios = <&pinctrl RZG2L_GPIO(8, 2) (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;	
 		AVDD28-supply = <&reg_3p3v>;
 		VDDIO-supply = <&reg_3p3v>;
 		touchscreen-size-x = <1024>;
