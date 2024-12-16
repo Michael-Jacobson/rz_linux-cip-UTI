@@ -299,12 +299,20 @@
 	};
 	
 	keyboard_pins: keyboard0 {
-	        keyboard_rows {
+	        /*keyboard_rows {
 	                pinmux = <RZG2L_PORT_PINMUX(0, 0, 1)>, 
 			         <RZG2L_PORT_PINMUX(0, 1, 1)>, 
 			         <RZG2L_PORT_PINMUX(1, 0, 1)>, 
 			         <RZG2L_PORT_PINMUX(1, 1, 1)>, 
 			         <RZG2L_PORT_PINMUX(2, 0, 1)>; 
+		 };*/
+		 
+		 keyboard_rows {
+	                pinmux = <RZG2L_PORT_PINMUX(0, 0, 0)>, 
+			         <RZG2L_PORT_PINMUX(0, 1, 0)>, 
+			         <RZG2L_PORT_PINMUX(1, 0, 0)>, 
+			         <RZG2L_PORT_PINMUX(1, 1, 0)>, 
+			         <RZG2L_PORT_PINMUX(2, 0, 0)>; 
 		 };
 		 
 		 keyboard_cols {
@@ -314,6 +322,8 @@
 			         <RZG2L_PORT_PINMUX(13, 2, 0)>;
 		 };
 	};
+	
+	
 };
 
 &sbc {

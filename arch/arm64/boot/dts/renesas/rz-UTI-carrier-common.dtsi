@@ -65,7 +65,8 @@
 			linux,code = <0x07>;
 			//wakeup-source;
             		interrupt-parent = <&intc_ex>;
-            		interrupts = <RZG2L_GPIO(3, 1) IRQ_TYPE_EDGE_BOTH>;
+            		//interrupts = <RZG2L_GPIO(3, 1) IRQ_TYPE_EDGE_BOTH>;
+            		interrupts = <7 IRQ_TYPE_EDGE_BOTH>;
 			debounce-interval = <10>; 
 		};
 		
@@ -74,7 +75,8 @@
 			linux,code = <0x08>;
 			//wakeup-source;
             		interrupt-parent = <&intc_ex>;
-            		interrupts = <RZG2L_GPIO(2, 1) IRQ_TYPE_EDGE_BOTH>;
+            		//interrupts = <RZG2L_GPIO(2, 1) IRQ_TYPE_EDGE_BOTH>;
+            		interrupts = <5 IRQ_TYPE_EDGE_BOTH>;
 			debounce-interval = <1>;
 		};
 		
@@ -144,8 +146,8 @@
 		compatible = "gpio-matrix-keypad";  
 		debounce-delay-ms = <5>;
 		col-scan-delay-us = <2>;
-		//interrupt-parent = <&pinctrl>;
-		interrupt-parent = <&intc_ex>;
+		interrupt-parent = <&pinctrl>;
+		//interrupt-parent = <&intc_ex>;
 		//pinctrl-names = "default";
 		
 		pinctrl-0 = <&keyboard_pins>;
