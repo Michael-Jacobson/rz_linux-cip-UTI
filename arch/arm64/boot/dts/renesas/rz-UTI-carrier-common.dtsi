@@ -67,7 +67,7 @@
 			//wakeup-source;
             		interrupt-parent = <&intc_ex>;
             		//interrupts = <RZG2L_GPIO(3, 1) IRQ_TYPE_EDGE_BOTH>;
-            		interrupts = <7 IRQ_TYPE_EDGE_BOTH>;
+            		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
 			debounce-interval = <10>; 
 		};
 		
@@ -77,7 +77,7 @@
 			//wakeup-source;
             		interrupt-parent = <&intc_ex>;
             		//interrupts = <RZG2L_GPIO(2, 1) IRQ_TYPE_EDGE_BOTH>;
-            		interrupts = <5 IRQ_TYPE_EDGE_BOTH>;
+            		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
 			debounce-interval = <1>;
 		};
 		
