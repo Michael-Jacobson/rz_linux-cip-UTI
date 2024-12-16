@@ -58,7 +58,8 @@
 		compatible = "gpio-keys";
 		#address-cells = <1>;
 		#size-cells = <0>;
-		//autorepeat;
+		pinctrl-0 = <&GPIO_Keys_IRQ_Pins>;
+		autorepeat;
 
 		HookSwitch {
 			label = "Handset Offhook";
