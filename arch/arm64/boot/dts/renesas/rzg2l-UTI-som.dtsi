@@ -303,8 +303,8 @@
 	                pinmux = <RZG2L_PORT_PINMUX(0, 0, 1)>, 
 			         <RZG2L_PORT_PINMUX(0, 1, 1)>, 
 			         <RZG2L_PORT_PINMUX(1, 0, 1)>, 
-			         <RZG2L_PORT_PINMUX(2, 0, 1)>, 
-			         <RZG2L_PORT_PINMUX(2, 1, 1)>; 
+			         <RZG2L_PORT_PINMUX(1, 1, 1)>, 
+			         <RZG2L_PORT_PINMUX(2, 0, 1)>; 
 		 };
 		 
 		 keyboard_cols {
