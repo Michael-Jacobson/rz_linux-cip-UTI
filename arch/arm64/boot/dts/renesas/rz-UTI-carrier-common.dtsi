@@ -65,7 +65,7 @@
 			linux,code = <0x07>;
 			//wakeup-source;
             		interrupt-parent = <&pinctrl>;
-            		interrupts = <RZG2L_GPIO(3, 1) IRQ_TYPE_EDGE_FALLING>;
+            		interrupts = <RZG2L_GPIO(3, 1) IRQ_TYPE_EDGE_BOTH>;
 			debounce-interval = <10>; 
 		};
 		
@@ -74,7 +74,7 @@
 			linux,code = <0x08>;
 			//wakeup-source;
             		interrupt-parent = <&pinctrl>;
-            		interrupts = <RZG2L_GPIO(2, 1) IRQ_TYPE_EDGE_FALLING>;
+            		interrupts = <RZG2L_GPIO(2, 1) IRQ_TYPE_EDGE_BOTH>;
 			debounce-interval = <1>;
 		};
 		
@@ -83,7 +83,7 @@
 			linux,code = <0x09>;
 			interrupt-parent = <&pinctrl>;
 			debounce-interval = <1>;
-			interrupts = <RZG2L_GPIO(48, 4) IRQ_TYPE_EDGE_FALLING>;
+			interrupts = <RZG2L_GPIO(48, 4) IRQ_TYPE_LEVEL_LOW>;
 		};
 		
 		LoopDetect {
@@ -144,20 +144,19 @@
 		compatible = "gpio-matrix-keypad";  
 		debounce-delay-ms = <5>;
 		col-scan-delay-us = <2>;
-		interrupt-parent = <&intc_ex>;
+		interrupt-parent = <&pinctrl>;
 		//pinctrl-names = "default";
-		//pinctrl-0 = <&gpio_matrix_keyboard_rows &gpio_matrix_keyboard_cols>;
 		
 		pinctrl-0 = <&keyboard_pins>;
 
 		//gpio-activelow;
 		//linux,wakeup;
 
-		row-gpios = <	&pinctrl RZG2L_GPIO(0, 0) GPIO_ACTIVE_HIGH
-				&pinctrl RZG2L_GPIO(0, 1) GPIO_ACTIVE_HIGH 
-				&pinctrl RZG2L_GPIO(1, 0) GPIO_ACTIVE_HIGH
-				&pinctrl RZG2L_GPIO(2, 0) GPIO_ACTIVE_HIGH
-				&pinctrl RZG2L_GPIO(2, 1) GPIO_ACTIVE_HIGH>;
+		row-gpios = <	&pinctrl RZG2L_GPIO(0, 0) GPIO_ACTIVE_LOW
+				&pinctrl RZG2L_GPIO(0, 1) GPIO_ACTIVE_LOW 
+				&pinctrl RZG2L_GPIO(1, 0) GPIO_ACTIVE_LOW
+				&pinctrl RZG2L_GPIO(1, 1) GPIO_ACTIVE_LOW
+				&pinctrl RZG2L_GPIO(2, 0) GPIO_ACTIVE_LOW>;
 
 		col-gpios = <	&pinctrl RZG2L_GPIO(12, 1) GPIO_ACTIVE_HIGH 
 				&pinctrl RZG2L_GPIO(13, 0) GPIO_ACTIVE_HIGH 
