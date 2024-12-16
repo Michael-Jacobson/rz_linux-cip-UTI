@@ -146,8 +146,8 @@
 		compatible = "gpio-matrix-keypad";  
 		debounce-delay-ms = <5>;
 		col-scan-delay-us = <2>;
-		interrupt-parent = <&pinctrl>;
-		//interrupt-parent = <&intc_ex>;
+		//interrupt-parent = <&pinctrl>;
+		interrupt-parent = <&intc_ex>;
 		//pinctrl-names = "default";
 		
 		pinctrl-0 = <&keyboard_pins>;
@@ -155,11 +155,11 @@
 		//gpio-activelow;
 		//linux,wakeup;
 
-		row-gpios = <	&pinctrl RZG2L_GPIO(0, 0) GPIO_ACTIVE_LOW
-				&pinctrl RZG2L_GPIO(0, 1) GPIO_ACTIVE_LOW 
-				&pinctrl RZG2L_GPIO(1, 0) GPIO_ACTIVE_LOW
-				&pinctrl RZG2L_GPIO(1, 1) GPIO_ACTIVE_LOW
-				&pinctrl RZG2L_GPIO(2, 0) GPIO_ACTIVE_LOW>;
+		row-gpios = <	&intc_ex 0 GPIO_ACTIVE_HIGH
+				&intc_ex 1 GPIO_ACTIVE_HIGH 
+				&intc_ex 2 GPIO_ACTIVE_HIGH
+				&intc_ex 3 GPIO_ACTIVE_HIGH
+				&intc_ex 4 GPIO_ACTIVE_HIGH>;
 
 		col-gpios = <	&pinctrl RZG2L_GPIO(12, 1) GPIO_ACTIVE_HIGH 
 				&pinctrl RZG2L_GPIO(13, 0) GPIO_ACTIVE_HIGH 
