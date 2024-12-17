@@ -67,7 +67,7 @@
 			wakeup-source;
             		interrupt-parent = <&intc_ex>;
             		//gpios = <&pinctrl RZG2L_GPIO(3, 1) GPIO_ACTIVE_LOW>;
-            		irq-gpios = <&pinctrl RZG2L_GPIO(3, 1) GPIO_ACTIVE_LOW>;
+            		irq-gpios = <&pinctrl RZG2L_GPIO(3, 1) (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
             		interrupts = <7 IRQ_TYPE_EDGE_BOTH>;
             		//linux,input-type = <5>; //EV_SW
 			debounce-interval = <10>; 
