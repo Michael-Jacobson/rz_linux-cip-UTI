@@ -52,6 +52,7 @@
 		pwms = <&mtu3 0 1200>;
 		brightness-levels = <0 50 70 90 110 130 150 170 190 210 255>;
 		default-brightness-level = <10>;
+		power-supply = <&EUP2681>;
 	};
 
 /*
