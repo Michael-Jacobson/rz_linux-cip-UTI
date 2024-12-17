@@ -298,7 +298,7 @@
 		};
 	};
 	
-	keyboard_pins: keyboard0 {
+	/*keyboard_pins: keyboard0 {
 	        keyboard_rows {
 	                pinmux = <RZG2L_PORT_PINMUX(0, 0, 1)>, 
 			         <RZG2L_PORT_PINMUX(0, 1, 1)>, 
@@ -313,7 +313,7 @@
 			         <RZG2L_PORT_PINMUX(13, 1, 0)>, 
 			         <RZG2L_PORT_PINMUX(13, 2, 0)>;
 		 };
-	};
+	};*/
 	
 	
 	GPIO_Keys_IRQ_Pins: gpiokeys0 {

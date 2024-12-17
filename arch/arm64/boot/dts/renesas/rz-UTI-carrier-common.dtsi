@@ -64,7 +64,7 @@
 		HookSwitch {
 			label = "Handset Offhook";
 			linux,code = <0x07>;
-			//wakeup-source;
+			wakeup-source;
             		interrupt-parent = <&intc_ex>;
             		gpios = <&pinctrl RZG2L_GPIO(3, 1) GPIO_ACTIVE_LOW>;
             		interrupts = <7 IRQ_TYPE_EDGE_BOTH>;
@@ -75,7 +75,7 @@
 		RingDetect {
 			label = "RingDetect"; 
 			linux,code = <0x08>;
-			//wakeup-source;
+			wakeup-source;
             		interrupt-parent = <&intc_ex>;
             		gpios = <&pinctrl RZG2L_GPIO(2, 1) GPIO_ACTIVE_LOW>;
             		interrupts = <5 IRQ_TYPE_EDGE_BOTH>;
@@ -110,7 +110,7 @@
 		};
 	};
 		
-	
+	/*
 	matrix_keypad: matrix_keypad0 {
 		compatible = "gpio-matrix-keypad";  
 		debounce-delay-ms = <5>;
@@ -160,6 +160,7 @@
 				0x040200BB      // DTMF# /
 				0x04030097>;      // MUTE /
 	};
+	*/
 	
 	leds {
 	       	compatible = "gpio-leds"; 
