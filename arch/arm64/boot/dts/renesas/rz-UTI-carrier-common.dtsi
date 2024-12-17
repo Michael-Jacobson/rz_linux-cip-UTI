@@ -54,7 +54,7 @@
 		default-brightness-level = <10>;
 	};*/
 	
-	gpio-keys { //this is for input GPIOs only
+	gpio_keys { //this is for input GPIOs only
 		compatible = "gpio-keys";
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -84,7 +84,7 @@
 		};
 	};
 	
-	gpio-keys-polled { //this is for input GPIOs only
+	gpio_keys_polled { //this is for input GPIOs only
 		compatible = "gpio-keys-polled";
 		#address-cells = <1>;
 		#size-cells = <0>;
