@@ -65,9 +65,9 @@
 			label = "Handset Offhook";
 			linux,code = <0x07>;
 			wakeup-source;
-            		interrupt-parent = <&pinctrl>;
+            		interrupt-parent = <&intc_ex>;
             		irq-gpios = <&pinctrl RZG2L_GPIO(3, 1) GPIO_ACTIVE_LOW>;
-            		interrupts = <RZG2L_GPIO(3, 1) IRQ_TYPE_EDGE_BOTH>;
+            		//interrupts = <RZG2L_GPIO(3, 1) IRQ_TYPE_EDGE_BOTH>;
             		//linux,input-type = <5>; //EV_SW
 			debounce-interval = <10>; 
 		};
