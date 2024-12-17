@@ -60,18 +60,7 @@
 		#size-cells = <0>;
 		pinctrl-0 = <&GPIO_Keys_IRQ_Pins>;
 		autorepeat;
-
-		HookSwitch {
-			label = "Handset Offhook";
-			linux,code = <0x07>;
-			wakeup-source;
-            		interrupt-parent = <&intc_ex>;
-            		//gpios = <&pinctrl RZG2L_GPIO(3, 1) GPIO_ACTIVE_LOW>;
-            		irq-gpios = <&pinctrl RZG2L_GPIO(3, 1) (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-            		interrupts = <7 IRQ_TYPE_EDGE_BOTH>;
-            		//linux,input-type = <5>; //EV_SW
-			debounce-interval = <10>; 
-		};
+		
 		
 		RingDetect {
 			label = "RingDetect"; 
@@ -79,7 +68,7 @@
 			wakeup-source;
             		interrupt-parent = <&intc_ex>;
             		//gpios = <&pinctrl RZG2L_GPIO(2, 1) GPIO_ACTIVE_LOW>;
-            		irq-gpios = <&pinctrl RZG2L_GPIO(2, 1) GPIO_ACTIVE_LOW>;
+            		//irq-gpios = <&pinctrl RZG2L_GPIO(2, 1) GPIO_ACTIVE_LOW>;
             		interrupts = <5 IRQ_TYPE_EDGE_BOTH>;
             		//linux,input-type = <5>; //EV_SW
 			debounce-interval = <1>;
@@ -91,7 +80,19 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 		poll-interval = <1>; //milliseconds
-		autorepeat;		
+		autorepeat;	
+		
+		HookSwitch {
+			label = "Handset Offhook";
+			linux,code = <0x07>;
+			//wakeup-source;
+            		//interrupt-parent = <&intc_ex>;
+            		gpios = <&pinctrl RZG2L_GPIO(3, 1) (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+            		//irq-gpios = <&pinctrl RZG2L_GPIO(3, 1) (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+            		//interrupts = <7 IRQ_TYPE_EDGE_BOTH>;
+            		linux,input-type = <5>; //EV_SW
+			debounce-interval = <10>; 
+		};	
 		
 		LineInUse {
 			label = "LineInUse"; 
