@@ -53,7 +53,7 @@
 		brightness-levels = <0 50 70 90 110 130 150 170 190 210 255>;
 		default-brightness-level = <10>;
 	};*/
-	
+
 	gpio_keys { //this is for input GPIOs only
 		compatible = "gpio-keys";
 		#address-cells = <1>;
@@ -65,10 +65,9 @@
 			label = "Handset Offhook";
 			linux,code = <0x07>;
 			wakeup-source;
-            		interrupt-parent = <&intc_ex>;
-            		//gpios = <&pinctrl RZG2L_GPIO(3, 1) GPIO_ACTIVE_LOW>;
+            		interrupt-parent = <&pinctrl>;
             		irq-gpios = <&pinctrl RZG2L_GPIO(3, 1) GPIO_ACTIVE_LOW>;
-            		interrupts = <7 IRQ_TYPE_EDGE_BOTH>;
+            		interrupts = <RZG2L_GPIO(3, 1) IRQ_TYPE_EDGE_BOTH>;
             		//linux,input-type = <5>; //EV_SW
 			debounce-interval = <10>; 
 		};
