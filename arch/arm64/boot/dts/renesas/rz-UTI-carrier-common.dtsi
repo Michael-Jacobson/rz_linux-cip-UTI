@@ -41,19 +41,20 @@
 		clock-frequency = <24000000>;
 	};
 	
-	lcd_bl: backlight {
+	/*lcd_bl: backlight {
 		compatible = "gpio-backlight";
 		gpios = <&pinctrl RZG2L_GPIO(9, 0) GPIO_ACTIVE_HIGH>;
 		default-on;
-	};
+	};*/
 	
-        /*lcd_bl: backlight {
+        lcd_bl: backlight {
 		compatible = "pwm-backlight";
 		pwms = <&mtu3 0 1200>;
 		brightness-levels = <0 50 70 90 110 130 150 170 190 210 255>;
 		default-brightness-level = <10>;
-	};*/
+	};
 
+/*
 	gpio_keys { //this is for input GPIOs only
 		compatible = "gpio-keys";
 		#address-cells = <1>;
@@ -61,6 +62,17 @@
 		pinctrl-0 = <&GPIO_Keys_IRQ_Pins>;
 		autorepeat;
 		
+		HookSwitch {
+			label = "Handset Offhook";
+			linux,code = <0x07>;
+			//wakeup-source;
+            		//interrupt-parent = <&intc_ex>;
+            		//gpios = <&pinctrl RZG2L_GPIO(3, 1) (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+            		//irq-gpios = <&pinctrl RZG2L_GPIO(3, 1) (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+            		//interrupts = <7 IRQ_TYPE_EDGE_BOTH>;
+            		//linux,input-type = <5>; //EV_SW
+			debounce-interval = <10>; 
+		};	
 		
 		RingDetect {
 			label = "RingDetect"; 
@@ -74,6 +86,7 @@
 			debounce-interval = <1>;
 		};
 	};
+	*/
 	
 	gpio_keys_polled { //this is for input GPIOs only
 		compatible = "gpio-keys-polled";
@@ -93,6 +106,18 @@
             		linux,input-type = <5>; //EV_SW
 			debounce-interval = <10>; 
 		};	
+		
+		RingDetect {
+			label = "RingDetect"; 
+			linux,code = <0x08>;
+			//wakeup-source;
+            		//interrupt-parent = <&intc_ex>;
+            		gpios = <&pinctrl RZG2L_GPIO(2, 1) GPIO_ACTIVE_LOW>;
+            		//irq-gpios = <&pinctrl RZG2L_GPIO(2, 1) GPIO_ACTIVE_LOW>;
+            		//interrupts = <5 IRQ_TYPE_EDGE_BOTH>;
+            		linux,input-type = <5>; //EV_SW
+			debounce-interval = <1>;
+		};
 		
 		LineInUse {
 			label = "LineInUse"; 
