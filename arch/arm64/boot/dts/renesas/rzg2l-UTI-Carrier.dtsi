@@ -59,13 +59,13 @@
 &mtu3 {
 	pinctrl-0 = <&mtu_pwm_pins>;
 	pinctrl-names = "default";
+	#pwm-cells = <2>;
 
 	// Enable PWM mode 1 out for MTIOC2A pins. 
-	pwm_mode1 = <2 0>;
-
-        mtu_pwm_pins:mtu_pwm {
-                pinmux = <RZG2L_PORT_PINMUX(9, 0, 4)>;  // MTIOC2A 
-        };
+	pwm_mode1 = <2 0>;  
+	pwm_complementary = <2 0>;
+	
+	status = "okay";      
 };
 
 
