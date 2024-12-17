@@ -66,8 +66,9 @@
 			linux,code = <0x07>;
 			//wakeup-source;
             		interrupt-parent = <&intc_ex>;
-            		//interrupts = <RZG2L_GPIO(3, 1) IRQ_TYPE_EDGE_BOTH>;
-            		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
+            		gpios = <&pinctrl RZG2L_GPIO(3, 1) GPIO_ACTIVE_LOW>;
+            		interrupts = <7 IRQ_TYPE_EDGE_BOTH>;
+            		linux,input-type = <5>; //EV_SW
 			debounce-interval = <10>; 
 		};
 		
@@ -76,26 +77,11 @@
 			linux,code = <0x08>;
 			//wakeup-source;
             		interrupt-parent = <&intc_ex>;
-            		//interrupts = <RZG2L_GPIO(2, 1) IRQ_TYPE_EDGE_BOTH>;
-            		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
+            		gpios = <&pinctrl RZG2L_GPIO(2, 1) GPIO_ACTIVE_LOW>;
+            		interrupts = <5 IRQ_TYPE_EDGE_BOTH>;
+            		linux,input-type = <5>; //EV_SW
 			debounce-interval = <1>;
 		};
-		
-		/*LineInUse {
-			label = "LineInUse"; 
-			linux,code = <0x09>;
-			interrupt-parent = <&pinctrl>;
-			debounce-interval = <1>;
-			interrupts = <RZG2L_GPIO(48, 4) IRQ_TYPE_LEVEL_LOW>;
-		};
-		
-		LoopDetect {
-			label = "LoopDetect"; 
-			linux,code = <0x0A>;
-			interrupt-parent = <&pinctrl>;
-			debounce-interval = <1>;
-			interrupts = <RZG2L_GPIO(48, 2) IRQ_TYPE_EDGE_FALLING>;
-		};*/
 	};
 	
 	gpio-keys-polled { //this is for input GPIOs only
@@ -125,12 +111,12 @@
 	};
 		
 	
-	/*matrix_keypad: matrix_keypad0 {
+	matrix_keypad: matrix_keypad0 {
 		compatible = "gpio-matrix-keypad";  
 		debounce-delay-ms = <5>;
 		col-scan-delay-us = <2>;
-		interrupt-parent = <&pinctrl>;
-		//interrupt-parent = <&intc_ex>;
+		//interrupt-parent = <&pinctrl>;
+		interrupt-parent = <&intc_ex>;
 		//pinctrl-names = "default";
 		
 		pinctrl-0 = <&keyboard_pins>;
@@ -174,7 +160,7 @@
 				0x040200BB      // DTMF# /
 				0x04030097>;      // MUTE /
 	};
-	*/
+	
 	leds {
 	       	compatible = "gpio-leds"; 
 
