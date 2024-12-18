@@ -63,7 +63,7 @@
 
 	// Enable PWM mode 1 out for MTIOC2A pins. 
 	pwm_mode1 = <3 0>;  
-	//pwm_complementary = <2 0>;
+	pwm_complementary = <3 0>;
 	
 	status = "okay";      
 };
