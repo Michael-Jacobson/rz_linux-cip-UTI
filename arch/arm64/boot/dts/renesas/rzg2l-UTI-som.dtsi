@@ -322,9 +322,9 @@
 	};
 	*/
 	
-	mtu_pwm_pins:mtu_pwm {
+	/*mtu_pwm_pins:mtu_pwm {
                 pinmux = <RZG2L_PORT_PINMUX(9, 0, 4)>;  // MTIOC2A 
-        };
+        };*/
 };
 
 &sbc {
