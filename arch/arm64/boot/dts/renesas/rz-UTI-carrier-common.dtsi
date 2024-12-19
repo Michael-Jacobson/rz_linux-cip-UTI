@@ -27,13 +27,13 @@
 		stdout-path = "serial0:115200n8";
 	};
 	
-	EUP2681: fixedregulator-LDO6 {
+	/*EUP2681: fixedregulator-LDO6 {
 		compatible = "regulator-fixed";
 		regulator-name = "EUP2681";
 		regulator-min-microvolt = <13000000>;
 		regulator-max-microvolt = <2100000>;
 		regulator-always-on;
-	};
+	};*/
 	
 	x1_clk: x1-clock {
 		compatible = "fixed-clock";
@@ -194,8 +194,6 @@
 	leds {
 	       	compatible = "gpio-leds"; 
 
-	       	//pinctrl-names = "default";
-
 	       	mute_led {
 		   	label = "mute_led";
 		   	gpios = <&pinctrl RZG2L_GPIO(42, 2) GPIO_ACTIVE_HIGH>; // Bank 4, pin 1 
@@ -275,20 +273,6 @@
 		   	gpios = <&pinctrl RZG2L_GPIO(9, 1) GPIO_ACTIVE_LOW>;  // Bank 4, pin 10 
 		   	default-state = "off";
 		};
-		
-		//temporary!!!!!!!!!!!!!!!!
-		/*TouchReset {
-			label = "Touch Screen Reset";
-			gpios = <&pinctrl RZG2L_GPIO(8, 2) GPIO_ACTIVE_LOW>;
-			default-state = "off";
-		};*/
-		
-		//temporary!!!!!!!!!!!!!!!!
-		/*LCDBacklight {
-			label = "Display Backlight";
-			gpios = <&pinctrl RZG2L_GPIO(9, 0)GPIO_ACTIVE_HIGH>;
-			default-state = "on";
-		};*/
    	};
    
 
@@ -297,8 +281,6 @@
 		simple-audio-card,format = "i2s";
 		simple-audio-card,bitclock-master = <&cpu_dai>;
 		simple-audio-card,frame-master = <&cpu_dai>;
-		//simple-audio-card,bitclock-inversion;
-		//simple-audio-card,mclk-fs = <256>;
 
 		simple-audio-card,widgets = 
 			"Speaker", "POTS Line Out",
@@ -423,14 +405,6 @@
 					<25000000>, //SE3 - ETHERNET 
 					<0>, //DIFF1 - unused
 					<0>; //DIFF2 - unused
-					/*
-					<0>, //unused
-					<0>, //unused
-					<25000000>, //Ethernet Phy
-					<12288000>, //AUDIO_MCK
-					<12288000>, //AUDIO_CLK1
-					<24000000>; //Ref
-					*/
 		//clock-divider-read-only = <1>, <1>, <1>, <1>, <1>;
 		clock-flags = <2176>, <2176>, <2176>, <2052>, <2176>, <2048>;
 	};
