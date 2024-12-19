@@ -55,7 +55,7 @@
 &vccq_sdhi1 {
 	gpios = <&pinctrl RZG2L_GPIO(39, 1) GPIO_ACTIVE_HIGH>;
 };
-
+/*
 &mtu3 {
 	pinctrl-0 = <&mtu3_pins>;
 	pinctrl-names = "default";
@@ -67,7 +67,7 @@
 	
 	status = "okay";      
 };
-
+*/
 
 
 #if (MTU3_PWM_SUPPORT && MTU3_PWM_COMPLEMENTARY_SELECT && POE3_SUPPORT)

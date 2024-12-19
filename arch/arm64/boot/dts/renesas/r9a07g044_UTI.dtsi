@@ -9,7 +9,7 @@
 #include <dt-bindings/clock/r9a07g044-cpg.h>
 
 /* This macro is used to enable setting of all MTU3 interrupts. */
-#define MTU3_ALL_IRQ_EN			0
+#define MTU3_ALL_IRQ_EN			1
 
 / {
 	compatible = "renesas,r9a07g044";

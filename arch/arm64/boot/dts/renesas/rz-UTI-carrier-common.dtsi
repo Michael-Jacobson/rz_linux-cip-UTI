@@ -41,19 +41,19 @@
 		clock-frequency = <24000000>;
 	};
 	
-	/*lcd_bl: backlight {
+	lcd_bl: backlight {
 		compatible = "gpio-backlight";
 		gpios = <&pinctrl RZG2L_GPIO(9, 0) GPIO_ACTIVE_HIGH>;
 		default-on;
-	};*/
+	};
 	
-        lcd_bl: backlight {
+        /*lcd_bl: backlight {
 		compatible = "pwm-backlight";
 		pwms = <&mtu3 0 1200>;
 		brightness-levels = <0 50 70 90 110 130 150 170 190 210 255>;
 		default-brightness-level = <10>;
 		power-supply = <&reg_3p3v>;
-	};
+	};*/
 
 /*
 	gpio_keys { //this is for input GPIOs only
