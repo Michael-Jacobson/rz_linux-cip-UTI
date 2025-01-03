@@ -464,7 +464,15 @@
 	status = "okay";
 };
 
-&sdhi1 { //USB
+&scif2 { //bluetooth communication
+	pinctrl-0 = <&scif2_pins>;
+	pinctrl-names = "default";
+
+	uart-has-rtscts;
+	status = "okay";
+};
+
+&sdhi1 { //wifi
 	pinctrl-0 = <&sdhi1_pins>;
 	pinctrl-1 = <&sdhi1_pins_uhs>;
 	pinctrl-names = "default", "state_uhs";
@@ -475,6 +483,20 @@
 	sd-uhs-sdr50;
 	sd-uhs-sdr104;
 	status = "okay";
+};
+
+&ssi0 { //codec audio
+	pinctrl-0 = <&ssi0_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";	
+};
+
+&ssi0 { //bluetooth audio
+	pinctrl-0 = <&ssi0_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";	
 };
 
 #if (!MTU3_PWM_SUPPORT)
@@ -580,9 +602,33 @@
 	};
 };*/
 
+/*
+&mtu3 {
+	pinctrl-0 = <&mtu3_pins>;
+	pinctrl-names = "default";
+	#pwm-cells = <2>;
+
+	// Enable PWM mode 1 out for MTIOC2A pins. 
+	pwm_mode1 = <3 0>;  
+	pwm_complementary = <3 0>;
+	
+	status = "okay";      
+};
+*/
+
 &mtu3 {
 	status = "okay";
 };
+
+#if (MTU3_PWM_SUPPORT && MTU3_PWM_COMPLEMENTARY_SELECT && POE3_SUPPORT)
+&poe3 {
+	status = "okay";
+
+	mtu3_ch34 {
+		mtu3_outputs = <0>; /* MTIOC3B-MTIOC3D */
+	};
+};
+#endif
 
 &intc_ex {
     status = "okay";

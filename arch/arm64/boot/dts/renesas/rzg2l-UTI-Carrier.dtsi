@@ -16,66 +16,10 @@
 		serial1 = &scif2;
 	};
 
-	x1_clk: x1-clock {
-		compatible = "fixed-clock";
-		#clock-cells = <0>;
-		clock-frequency = <24000000>;
-	};
 };
 
-/*&cpu_dai {
-	sound-dai = <&ssi0>;
-};*/
 
 
-/*
- * To enable SCIF2 (SER0) on PMOD1 (CN7)
- * SW1 should be at position 2->3 so that SER0_CTS# line is activated
- * SW2 should be at position 2->3 so that SER0_TX line is activated
- * SW3 should be at position 2->3 so that SER0_RX line is activated
- * SW4 should be at position 2->3 so that SER0_RTS# line is activated
- */
-#if PMOD1_SER0
-&scif2 {
-	pinctrl-0 = <&scif2_pins>;
-	pinctrl-names = "default";
-
-	uart-has-rtscts;
-	status = "okay";
-};
-#endif
-
-&ssi0 {
-	pinctrl-0 = <&ssi0_pins>;
-	pinctrl-names = "default";
-
-	status = "okay";	
-};
-
-&vccq_sdhi1 {
-	gpios = <&pinctrl RZG2L_GPIO(39, 1) GPIO_ACTIVE_HIGH>;
-};
-/*
-&mtu3 {
-	pinctrl-0 = <&mtu3_pins>;
-	pinctrl-names = "default";
-	#pwm-cells = <2>;
-
-	// Enable PWM mode 1 out for MTIOC2A pins. 
-	pwm_mode1 = <3 0>;  
-	pwm_complementary = <3 0>;
-	
-	status = "okay";      
-};
-*/
 
 
-#if (MTU3_PWM_SUPPORT && MTU3_PWM_COMPLEMENTARY_SELECT && POE3_SUPPORT)
-&poe3 {
-	status = "okay";
 
-	mtu3_ch34 {
-		mtu3_outputs = <0>; /* MTIOC3B-MTIOC3D */
-	};
-};
-#endif
