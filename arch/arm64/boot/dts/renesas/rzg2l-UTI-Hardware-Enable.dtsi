@@ -192,141 +192,6 @@
 	status = "okay";
 };
 
-&pinctrl {
-	/*adc_pins: adc {
-		pinmux = <RZG2L_PORT_PINMUX(9, 0, 2)>; // ADC_TRG 
-	};*/
-
-	eth0_pins: eth0 {
-		pinmux = <RZG2L_PORT_PINMUX(28, 1, 1)>, /* ET0_LINKSTA */
-			 <RZG2L_PORT_PINMUX(27, 1, 1)>, /* ET0_MDC */
-			 <RZG2L_PORT_PINMUX(28, 0, 1)>, /* ET0_MDIO */
-			 <RZG2L_PORT_PINMUX(20, 0, 1)>, /* ET0_TXC */
-			 <RZG2L_PORT_PINMUX(20, 1, 1)>, /* ET0_TX_CTL */
-			 <RZG2L_PORT_PINMUX(20, 2, 1)>, /* ET0_TXD0 */
-			 <RZG2L_PORT_PINMUX(21, 0, 1)>, /* ET0_TXD1 */
-			 <RZG2L_PORT_PINMUX(21, 1, 1)>, /* ET0_TXD2 */
-			 <RZG2L_PORT_PINMUX(22, 0, 1)>, /* ET0_TXD3 */
-			 <RZG2L_PORT_PINMUX(24, 0, 1)>, /* ET0_RXC */
-			 <RZG2L_PORT_PINMUX(24, 1, 1)>, /* ET0_RX_CTL */
-			 <RZG2L_PORT_PINMUX(25, 0, 1)>, /* ET0_RXD0 */
-			 <RZG2L_PORT_PINMUX(25, 1, 1)>, /* ET0_RXD1 */
-			 <RZG2L_PORT_PINMUX(26, 0, 1)>, /* ET0_RXD2 */
-			 <RZG2L_PORT_PINMUX(26, 1, 1)>; /* ET0_RXD3 */
-	};
-
-	gpio-sd0-pwr-en-hog {
-		gpio-hog;
-		gpios = <RZG2L_GPIO(4, 1) GPIO_ACTIVE_HIGH>;
-		output-high;
-		line-name = "gpio_sd0_pwr_en";
-	};
-
-	qspi0_pins: qspi0 {
-		qspi0-data {
-			pins = "QSPI0_IO0", "QSPI0_IO1", "QSPI0_IO2", "QSPI0_IO3";
-			power-source = <1800>;
-		};
-
-		qspi0-ctrl {
-			pins = "QSPI0_SPCLK", "QSPI0_SSL", "QSPI_RESET#";
-			power-source = <1800>;
-		};
-	};
-
-	/*
-	 * SD0 device selection is XOR between GPIO_SD0_DEV_SEL and SW1[2]
-	 * The below switch logic can be used to select the device between
-	 * eMMC and microSD, after setting GPIO_SD0_DEV_SEL to high in DT.
-	 * SW1[2] should be at position 2/OFF to enable 64 GB eMMC
-	 * SW1[2] should be at position 3/ON to enable uSD card CN3
-	 */
-	sd0-dev-sel-hog {
-		gpio-hog;
-		gpios = <RZG2L_GPIO(41, 1) GPIO_ACTIVE_HIGH>;
-		output-high;
-		line-name = "sd0_dev_sel";
-	};
-
-	sdhi0_emmc_pins: sd0emmc {
-		sd0_emmc_data {
-			pins = "SD0_DATA0", "SD0_DATA1", "SD0_DATA2", "SD0_DATA3",
-			       "SD0_DATA4", "SD0_DATA5", "SD0_DATA6", "SD0_DATA7";
-			power-source = <1800>;
-		};
-
-		sd0_emmc_ctrl {
-			pins = "SD0_CLK", "SD0_CMD";
-			power-source = <1800>;
-		};
-
-		sd0_emmc_rst {
-			pins = "SD0_RST#";
-			power-source = <1800>;
-		};
-	};
-
-	sdhi0_pins: sd0 {
-		sd0_data {
-			pins = "SD0_DATA0", "SD0_DATA1", "SD0_DATA2", "SD0_DATA3";
-			power-source = <3300>;
-		};
-
-		sd0_ctrl {
-			pins = "SD0_CLK", "SD0_CMD";
-			power-source = <3300>;
-		};
-
-		sd0_mux {
-			pinmux = <RZG2L_PORT_PINMUX(47, 0, 2)>; /* SD0_CD */
-		};
-	};
-
-	sdhi0_pins_uhs: sd0_uhs {
-		sd0_data_uhs {
-			pins = "SD0_DATA0", "SD0_DATA1", "SD0_DATA2", "SD0_DATA3";
-			power-source = <1800>;
-		};
-
-		sd0_ctrl_uhs {
-			pins = "SD0_CLK", "SD0_CMD";
-			power-source = <1800>;
-		};
-
-		sd0_mux_uhs {
-			pinmux = <RZG2L_PORT_PINMUX(47, 0, 2)>; /* SD0_CD */
-		};
-	};
-	
-	/*keyboard_pins: keyboard0 {
-	        keyboard_rows {
-	                pinmux = <RZG2L_PORT_PINMUX(0, 0, 1)>, 
-			         <RZG2L_PORT_PINMUX(0, 1, 1)>, 
-			         <RZG2L_PORT_PINMUX(1, 0, 1)>, 
-			         <RZG2L_PORT_PINMUX(1, 1, 1)>, 
-			         <RZG2L_PORT_PINMUX(2, 0, 1)>; 
-		 };
-		 
-		 keyboard_cols {
-		        pinmux = <RZG2L_PORT_PINMUX(12, 1, 0)>, 
-			         <RZG2L_PORT_PINMUX(13, 0, 0)>, 
-			         <RZG2L_PORT_PINMUX(13, 1, 0)>, 
-			         <RZG2L_PORT_PINMUX(13, 2, 0)>;
-		 };
-	};*/
-	
-	/*
-	GPIO_Keys_IRQ_Pins: gpiokeys0 {
-	        pinmux = <RZG2L_PORT_PINMUX(2, 1, 1)>, 
-          	         <RZG2L_PORT_PINMUX(3, 1, 1)>;
-	};
-	*/
-	
-	/*mtu_pwm_pins:mtu_pwm {
-                pinmux = <RZG2L_PORT_PINMUX(9, 0, 4)>;  // MTIOC2A 
-        };*/
-};
-
 &sbc {
 	pinctrl-0 = <&qspi0_pins>;
 	pinctrl-names = "default";
@@ -404,6 +269,19 @@
 };
 #endif
 
+&sdhi1 {
+        status = "okay";
+};
+
+&ssi0 {
+        status = "okay";
+};
+
+&ssi1 {
+        status = "okay";
+};
+
+
 &wdt0 {
 	status = "okay";
 	timeout-sec = <60>;
@@ -464,14 +342,110 @@
 };
 
 &i2c0 {
-	pinctrl-0 = <&i2c0_pins>;
+	status = "okay";
+};
+
+&i2c1 {
+	status = "okay";
+};
+
+&audio_clk1{
+	clock-frequency = <12288000>;
+};
+
+&audio_clk2{
+	clock-frequency = <12288000>;
+};
+
+
+&ehci0 { //USB
+	dr_mode = "otg";
+	status = "okay";
+};
+
+&ehci1 { //USB
+	status = "okay";
+};
+
+&hsusb { //USB
+	dr_mode = "otg";
+	status = "okay";
+};
+
+
+&i2c3 {
+	status = "okay";
+	//pinctrl-names = "default";
+	//pinctrl-0 = <&i2c3_pins>;		
+};
+
+&ohci0 { //USB
+	dr_mode = "otg";
+	status = "okay";
+};
+
+&ohci1 { //USB
+	status = "okay";
+};
+
+&phyrst {
+	status = "okay";
+};
+
+&scif0 {
+	status = "okay";
+};
+
+&scif2 { 
+        status = "okay";
+};
+
+
+&usb2_phy0 { //USB
+	pinctrl-0 = <&usb0_pins>;
 	pinctrl-names = "default";
-	clock-frequency = <100000>;
+
+	vbus-supply = <&usb0_vbus_otg>;
+	status = "okay";
+};
+
+&usb2_phy1 { //USB
+	pinctrl-0 = <&usb1_pins>;
+	pinctrl-names = "default";
 
 	status = "okay";
-
-	/*pmic: da9281@a2 {
-		compatible = "renesas,raa215300"; 
-		reg = <0xa2>;
-	};*/
 };
+
+&du {
+	status = "okay";
+};
+
+&dsi0 {
+        status = "okay";
+};
+
+&cru {
+	status = "okay";
+};
+
+
+&intc_ex {
+    status = "okay";
+};
+
+
+&mtu3 {
+	status = "okay";
+};
+
+#if (MTU3_PWM_SUPPORT && MTU3_PWM_COMPLEMENTARY_SELECT && POE3_SUPPORT)
+&poe3 {
+	status = "okay";
+
+	mtu3_ch34 {
+		mtu3_outputs = <0>; /* MTIOC3B-MTIOC3D */
+	};
+};
+#endif
+
+

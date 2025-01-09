@@ -7,9 +7,9 @@
 
 /dts-v1/;
 #include "r9a07g044_UTI.dtsi"
-#include "rzg2l-UTI-som.dtsi"
+#include "rzg2l-UTI-Hardware-Enable.dtsi"
 #include "rzg2l-UTI-pinfunction.dtsi"
-#include "rz-UTI-carrier-common.dtsi"
+#include "rz-UTI-Implemented-Hardware.dtsi"
 
 / {
 	model = "Ultratec 2400i next Gen prototype on Custom Board";

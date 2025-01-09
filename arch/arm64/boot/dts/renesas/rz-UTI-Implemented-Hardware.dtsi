@@ -25,15 +25,7 @@
 
 	chosen {
 		stdout-path = "serial0:115200n8";
-	};
-	
-	/*EUP2681: fixedregulator-LDO6 {
-		compatible = "regulator-fixed";
-		regulator-name = "EUP2681";
-		regulator-min-microvolt = <13000000>;
-		regulator-max-microvolt = <2100000>;
-		regulator-always-on;
-	};*/
+	};	
 	
 	x1_clk: x1-clock {
 		compatible = "fixed-clock";
@@ -371,33 +363,11 @@
 	};
 };
 
-&audio_clk1{
-	clock-frequency = <12288000>;
-};
-
-&audio_clk2{
-	clock-frequency = <12288000>;
-};
-
-
-&ehci0 { //USB
-	dr_mode = "otg";
-	status = "okay";
-};
-
-&ehci1 { //USB
-	status = "okay";
-};
-
-&hsusb { //USB
-	dr_mode = "otg";
-	status = "okay";
-};
 
 &i2c0 {
 	pinctrl-0 = <&i2c0_pins>;
-	//pinctrl-names = "default";
-	//status = "okay";
+	pinctrl-names = "default";
+	clock-frequency = <100000>;
 	
 	tlv320aic3106: tlv320aic3106@18 {
 		#sound-dai-cells = <0>;
@@ -446,8 +416,6 @@
 };
 
 &i2c1 {
-	status = "okay";
-
 	gt911@5d {
 		compatible = "goodix,gt911";
 		reg = <0x5d>;
@@ -474,37 +442,16 @@
 	//add digital POT
 };
 
-&i2c3 {
-	status = "okay";
-	//pinctrl-names = "default";
-	//pinctrl-0 = <&i2c3_pins>;		
-};
-
-&ohci0 { //USB
-	dr_mode = "otg";
-	status = "okay";
-};
-
-&ohci1 { //USB
-	status = "okay";
-};
-
-&phyrst {
-	status = "okay";
-};
-
 &scif0 {
 	pinctrl-0 = <&scif0_pins>;
 	pinctrl-names = "default";
-	status = "okay";
 };
 
 &scif2 { //bluetooth communication
 	pinctrl-0 = <&scif2_pins>;
 	pinctrl-names = "default";
 
-	uart-has-rtscts;
-	status = "okay";
+	uart-has-rtscts;	
 };
 
 &sdhi1 { //wifi
@@ -516,24 +463,19 @@
 	vqmmc-supply = <&vccq_sdhi1>;
 	bus-width = <4>;
 	sd-uhs-sdr50;
-	sd-uhs-sdr104;
-	status = "okay";
+	sd-uhs-sdr104;	
 };
 
 &ssi0 { //codec audio
 	pinctrl-0 = <&ssi0_pins>;
 	pinctrl-names = "default";
-
-	status = "okay";	
 };
 
-&ssi0 { //bluetooth audio
-	pinctrl-0 = <&ssi0_pins>;
+&ssi1 { //bluetooth audio
+	pinctrl-0 = <&ssi1_pins>;
 	pinctrl-names = "default";
-
-	status = "okay";	
 };
-
+/*
 #if (!MTU3_PWM_SUPPORT)
 &spi1 {
 	pinctrl-0 = <&spi1_pins>;
@@ -544,28 +486,8 @@
 	status = "okay";
 };
 #endif
-
-&usb2_phy0 { //USB
-	pinctrl-0 = <&usb0_pins>;
-	pinctrl-names = "default";
-
-	vbus-supply = <&usb0_vbus_otg>;
-	status = "okay";
-};
-
-&usb2_phy1 { //USB
-	pinctrl-0 = <&usb1_pins>;
-	pinctrl-names = "default";
-
-	status = "okay";
-};
-
-&du {
-	status = "okay";
-};
-
-&dsi0 {
-	status = "okay";
+*/
+&dsi0 {	
 	#address-cells = <1>;
 	#size-cells = <0>;
 	
@@ -618,25 +540,6 @@
 	};	
 };
 
-
-&cru {
-	status = "okay";
-};
-
-/*&csi2 {
-	status = "okay";
-
-	ports {
-		port {
-			csi2_in: endpoint {
-				clock-lanes = <0>;
-				data-lanes = <1 2>;
-				remote-endpoint = <&ov5645_to_csi>;
-			};
-		};
-	};
-};*/
-
 /*
 &mtu3 {
 	pinctrl-0 = <&mtu3_pins>;
@@ -646,25 +549,7 @@
 	// Enable PWM mode 1 out for MTIOC2A pins. 
 	pwm_mode1 = <3 0>;  
 	pwm_complementary = <3 0>;
-	
-	status = "okay";      
 };
 */
 
-&mtu3 {
-	status = "okay";
-};
 
-#if (MTU3_PWM_SUPPORT && MTU3_PWM_COMPLEMENTARY_SELECT && POE3_SUPPORT)
-&poe3 {
-	status = "okay";
-
-	mtu3_ch34 {
-		mtu3_outputs = <0>; /* MTIOC3B-MTIOC3D */
-	};
-};
-#endif
-
-&intc_ex {
-    status = "okay";
-};
