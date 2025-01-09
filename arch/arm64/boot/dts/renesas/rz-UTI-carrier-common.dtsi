@@ -196,73 +196,73 @@
 
 	       	mute_led {
 		   	label = "mute_led";
-		   	gpios = <&pinctrl RZG2L_GPIO(42, 2) GPIO_ACTIVE_HIGH>; // Bank 4, pin 1 
+		   	gpios = <&pinctrl RZG2L_GPIO(42, 2) GPIO_ACTIVE_HIGH>; //
 		   	default-state = "off";	   
 	       	};
 	       
 	       	captions_led {
 		   	label = "captions_led";
-		   	gpios = <&pinctrl RZG2L_GPIO(42, 3) GPIO_ACTIVE_HIGH>; // Bank 4, pin 2 
+		   	gpios = <&pinctrl RZG2L_GPIO(42, 3) GPIO_ACTIVE_HIGH>;
 		   	default-state = "off";
 	       	};
 
 	       	keypad_led {
 		   	label = "keypad_led";
-		   	gpios = <&pinctrl RZG2L_GPIO(42, 4) GPIO_ACTIVE_HIGH>; // Bank 4, pin 3 
+		   	gpios = <&pinctrl RZG2L_GPIO(42, 4) GPIO_ACTIVE_HIGH>;
 		   	default-state = "off";
    	    	};
 
 		vol6_led {
 		   	label = "vol6_led";
-		   	gpios = <&pinctrl RZG2L_GPIO(19, 0) GPIO_ACTIVE_HIGH>; // Bank 4, pin 4 
+		   	gpios = <&pinctrl RZG2L_GPIO(19, 0) GPIO_ACTIVE_HIGH>; 
 		   	default-state = "off";
 		   	//linux,default-trigger = "timer";
 	       	};
 
 		vol5_led {
 		   	label = "vol5_led";
-		   	gpios = <&pinctrl RZG2L_GPIO(19, 1) GPIO_ACTIVE_HIGH>; // Bank 4, pin 5 
+		   	gpios = <&pinctrl RZG2L_GPIO(19, 1) GPIO_ACTIVE_HIGH>; 
 		   	default-state = "off";
 		   	//linux,default-trigger = "timer";
 	       	};
 
 		vol4_led {
 		   	label = "vol4_led";
-		   	gpios = <&pinctrl RZG2L_GPIO(44, 0) GPIO_ACTIVE_HIGH>; // Bank 4, pin 6 
+		   	gpios = <&pinctrl RZG2L_GPIO(44, 0) GPIO_ACTIVE_HIGH>;
 		   	default-state = "off";
 		   	//linux,default-trigger = "timer";
 	       	};
 		
 		vol3_led {
 		   	label = "vol3_led";
-		   	gpios = <&pinctrl RZG2L_GPIO(44, 3) GPIO_ACTIVE_HIGH>; // Bank 4, pin 7 
+		   	gpios = <&pinctrl RZG2L_GPIO(44, 3) GPIO_ACTIVE_HIGH>;
 		   	default-state = "off";
 		   	//linux,default-trigger = "timer";
 	       	};
 
 		vol2_led {
 		   	label = "vol2_led";
-		   	gpios = <&pinctrl RZG2L_GPIO(45, 2) GPIO_ACTIVE_HIGH>; // Bank 4, pin 8 
+		   	gpios = <&pinctrl RZG2L_GPIO(45, 2) GPIO_ACTIVE_HIGH>;
 		   	default-state = "off";
 		   	//linux,default-trigger = "timer";
 	       	};
 
 		vol1_led {
 		   	label = "vol1_led";
-		   	gpios = <&pinctrl RZG2L_GPIO(45, 3) GPIO_ACTIVE_HIGH>; // Bank 4, pin 9 
+		   	gpios = <&pinctrl RZG2L_GPIO(45, 3) GPIO_ACTIVE_HIGH>;
 		   	default-state = "off";
 		   	//linux,default-trigger = "timer";
 	       	};
 
 	       	spkr_led {
 		   	label = "spkr_led";
-		   	gpios = <&pinctrl RZG2L_GPIO(7, 0) GPIO_ACTIVE_HIGH>;  // Bank 4, pin 10 
+		   	gpios = <&pinctrl RZG2L_GPIO(7, 0) GPIO_ACTIVE_HIGH>; 
 		   	default-state = "off";
 		};
 		
 		RingFlasher {
 			label = "RingFlasher";
-	   		gpios = <&pinctrl RZG2L_GPIO(8, 1) GPIO_ACTIVE_HIGH>;  // Bank 4, pin 21 
+	   		gpios = <&pinctrl RZG2L_GPIO(8, 1) GPIO_ACTIVE_HIGH>;  
 	   		default-state = "off";
 	   		//linux,default-trigger = "timer";
 	   		//flash-max-timeout-us = <1000000>;
@@ -270,7 +270,42 @@
 		
 		HookSwControl {
 		        label = "HookSwControl";
-		   	gpios = <&pinctrl RZG2L_GPIO(9, 1) GPIO_ACTIVE_LOW>;  // Bank 4, pin 10 
+		   	gpios = <&pinctrl RZG2L_GPIO(9, 1) GPIO_ACTIVE_LOW>; 
+		   	default-state = "off";
+		};
+		
+		//TEMPORARY
+		WIFI_WAKE {
+		        label = "WiFiWake";
+		   	gpios = <&pinctrl RZG2L_GPIO(46, 0) GPIO_ACTIVE_HIGH>;
+		   	default-state = "on";
+		};
+		
+		//TEMPORARY
+		WIFI_RESET {
+		        label = "WiFiReset";
+		   	gpios = <&pinctrl RZG2L_GPIO(46, 1) GPIO_ACTIVE_LOW>;
+		   	default-state = "off";
+		};
+		
+		//TEMPORARY
+		WIFI_BT_PD {
+		        label = "WiFiBTPwDn";
+		   	gpios = <&pinctrl RZG2L_GPIO(46, 2) GPIO_ACTIVE_LOW>;
+		   	default-state = "off";
+		};
+		
+		//TEMPORARY
+		BT_WAKE {
+		        label = "BTWake";
+		   	gpios = <&pinctrl RZG2L_GPIO(46, 3) GPIO_ACTIVE_HIGH>;
+		   	default-state = "on";
+		};
+		
+		//TEMPORARY
+		BT_RESET {
+		        label = "BTReset";
+		   	gpios = <&pinctrl RZG2L_GPIO(47, 0) GPIO_ACTIVE_LOW>;
 		   	default-state = "off";
 		};
    	};
