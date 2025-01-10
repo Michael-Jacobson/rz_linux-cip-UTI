@@ -41,7 +41,7 @@
 	
         /*lcd_bl: backlight {
 		compatible = "pwm-backlight";
-		pwms = <&mtu3 0 1200>;
+		pwms = <&mtu3 3 1200>;
 		brightness-levels = <0 50 70 90 110 130 150 170 190 210 255>;
 		default-brightness-level = <10>;
 		power-supply = <&reg_3p3v>;
@@ -475,18 +475,7 @@
 	pinctrl-0 = <&ssi1_pins>;
 	pinctrl-names = "default";
 };
-/*
-#if (!MTU3_PWM_SUPPORT)
-&spi1 {
-	pinctrl-0 = <&spi1_pins>;
-	pinctrl-names = "default";
-	dmas = <&dmac 0x2e99>, <&dmac 0x2e9a>;
-	dma-names = "tx", "rx";
 
-	status = "okay";
-};
-#endif
-*/
 &dsi0 {	
 	#address-cells = <1>;
 	#size-cells = <0>;
@@ -540,8 +529,8 @@
 	};	
 };
 
-/*
-&mtu3 {
+
+/*&mtu3 {
 	pinctrl-0 = <&mtu3_pins>;
 	pinctrl-names = "default";
 	#pwm-cells = <2>;
@@ -549,7 +538,7 @@
 	// Enable PWM mode 1 out for MTIOC2A pins. 
 	pwm_mode1 = <3 0>;  
 	pwm_complementary = <3 0>;
-};
-*/
+};*/
+
 
 
