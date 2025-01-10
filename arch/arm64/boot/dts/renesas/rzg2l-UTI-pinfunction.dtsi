@@ -53,14 +53,12 @@
 			 <RZG2L_PORT_PINMUX(38, 1, 1)>;	/* RxD */
 	};
 
-#if (!MTU3_PHASE_COUNTING_SUPPORT)
 	scif2_pins: scif2 {
-		pinmux = <RZG2L_PORT_PINMUX(48, 0, 1)>, /* TxD */
-			 <RZG2L_PORT_PINMUX(48, 1, 1)>, /* RxD */
-			 <RZG2L_PORT_PINMUX(48, 3, 1)>, /* CTS# */
-			 <RZG2L_PORT_PINMUX(48, 4, 1)>; /* RTS# */
+		pinmux = <RZG2L_PORT_PINMUX(4, 0, 2)>, /* TxD */
+			 <RZG2L_PORT_PINMUX(4, 1, 2)>, /* RxD */
+			 <RZG2L_PORT_PINMUX(5, 1, 2)>, /* CTS# */
+			 <RZG2L_PORT_PINMUX(5, 2, 2)>; /* RTS# */
 	};
-#endif
 
 	sdhi1_pins: sd1 {
 		sd1_data {
