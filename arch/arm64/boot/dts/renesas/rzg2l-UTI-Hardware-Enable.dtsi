@@ -401,13 +401,13 @@
 };
 
 
-&usb2_phy0 { //USB
+/*&usb2_phy0 { //USB
 	pinctrl-0 = <&usb0_pins>;
 	pinctrl-names = "default";
 
 	vbus-supply = <&usb0_vbus_otg>;
 	status = "okay";
-};
+};*/
 
 &usb2_phy1 { //USB
 	pinctrl-0 = <&usb1_pins>;
