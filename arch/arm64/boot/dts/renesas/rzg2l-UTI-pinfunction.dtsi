@@ -121,11 +121,11 @@
 	};
 		
 
-	usb0_pins: usb0 {
-		pinmux = //<RZG2L_PORT_PINMUX(4, 0, 1)>, /* VBUS */
-			 <RZG2L_PORT_PINMUX(5, 0, 1)>, /* OVC */
-			 <RZG2L_PORT_PINMUX(5, 1, 1)>; /* OTG_ID */
-	};
+	/*usb0_pins: usb0 {
+		pinmux = //<RZG2L_PORT_PINMUX(4, 0, 1)>, // VBUS 
+			 <RZG2L_PORT_PINMUX(5, 0, 1)>, // OVC 
+			 <RZG2L_PORT_PINMUX(5, 1, 1)>; // OTG_ID 
+	};*/
 
 	usb1_pins: usb1 {
 		pinmux = <RZG2L_PORT_PINMUX(42, 0, 1)>, /* VBUS */
@@ -150,12 +150,12 @@
 			 <RZG2L_PORT_PINMUX(26, 1, 1)>; /* ET0_RXD3 */
 	};
 
-	gpio-sd0-pwr-en-hog {
+	/*gpio-sd0-pwr-en-hog {
 		gpio-hog;
 		gpios = <RZG2L_GPIO(4, 1) GPIO_ACTIVE_HIGH>;
 		output-high;
 		line-name = "gpio_sd0_pwr_en";
-	};
+	};*/
 
 	qspi0_pins: qspi0 {
 		qspi0-data {
@@ -233,7 +233,7 @@
 		};
 	};
 	
-	/*NX611_Control_Pins: NX611_Pins {
+	NX611_Control_Pins: NX611_Pins {
 	        wifi_pins {
 	                pinmux = <RZG2L_PORT_PINMUX(46, 0, 0)>, // wake 
 	                         <RZG2L_PORT_PINMUX(46, 1, 0)>; // reset 
@@ -247,7 +247,7 @@
 	        wifi_bt_module_power {
 	                pinmux = <RZG2L_PORT_PINMUX(46, 2, 0)>;
 	        };
-	};*/
+	};
 	
 	/*keyboard_pins: keyboard0 {
 	        keyboard_rows {
