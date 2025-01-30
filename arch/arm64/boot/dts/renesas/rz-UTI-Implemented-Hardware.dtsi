@@ -34,7 +34,7 @@
 		pinctrl-0 = <&NX611_Control_Pins>; 
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
-		gpio = <&pinctrl RZG2L_GPIO(46, 2) GPIO_ACTIVE_HIGH>; /* WiFi BT Power Down?? */
+		gpio = <&pinctrl RZG2L_GPIO(46, 0) GPIO_ACTIVE_HIGH>; /* WiFi Wake */
 		enable-active-high;
 	};	
 	
@@ -42,7 +42,7 @@
 		compatible = "mmc-pwrseq-simple";
 		pinctrl-names = "default";
 		pinctrl-0 = <&NX611_Control_Pins>; 
-		reset-gpios = <&pinctrl RZG2L_GPIO(46, 1) GPIO_ACTIVE_LOW>; /* WiFi reset?? */
+		reset-gpios = <&pinctrl RZG2L_GPIO(46, 1) GPIO_ACTIVE_LOW>; /* WiFi reset */
 		post-power-on-delay-ms = <200>;
 		//status = "okay";
 	};
@@ -55,7 +55,7 @@
 	sound-bt-sco {
 		compatible = "simple-audio-card";
 		simple-audio-card,name = "bt-sco-audio";
-		simple-audio-card,format = "dsp_a";
+		simple-audio-card,format = "i2s";
 		simple-audio-card,bitclock-inversion;
 		simple-audio-card,frame-master = <&btcpu>;
 		simple-audio-card,bitclock-master = <&btcpu>;
@@ -313,11 +313,11 @@
 		};
 		
 		//TEMPORARY??
-		WIFI_WAKE {
+		/*WIFI_WAKE {
 		        label = "WiFiWake";
 		   	gpios = <&pinctrl RZG2L_GPIO(46, 0) GPIO_ACTIVE_HIGH>;
 		   	default-state = "on";
-		};
+		};*/
 		
 		//TEMPORARY
 		/*WIFI_RESET {
@@ -326,21 +326,21 @@
 		   	default-state = "off";
 		};*/
 		
-		//TEMPORARY
-		/*WIFI_BT_PD {
+		//TEMPORARY - this is for power savings, we could hog this high eventually
+		WIFI_BT_PD {
 		        label = "WiFiBTPwDn";
 		   	gpios = <&pinctrl RZG2L_GPIO(46, 2) GPIO_ACTIVE_LOW>;
 		   	default-state = "off";
-		};*/
+		};
 		
-		//TEMPORARY??
+		//TEMPORARY?? there is a pending driver change that will facilitate this 
 		BT_WAKE {
 		        label = "BTWake";
 		   	gpios = <&pinctrl RZG2L_GPIO(46, 3) GPIO_ACTIVE_HIGH>;
 		   	default-state = "on";
 		};
 		
-		//TEMPORARY??
+		//TEMPORARY?? this is controlled in app
 		BT_RESET {
 		        label = "BTReset";
 		   	gpios = <&pinctrl RZG2L_GPIO(47, 0) GPIO_ACTIVE_LOW>;
@@ -495,6 +495,7 @@
 	
 	bluetooth {
 		compatible = "nxp,88w8997-bt";
+		//device-wakeup-gpios = <&pinctrl RZG2L_GPIO(46, 3) GPIO_ACTIVE_HIGH>; add in when driver is patched
 	};	
 };
 
