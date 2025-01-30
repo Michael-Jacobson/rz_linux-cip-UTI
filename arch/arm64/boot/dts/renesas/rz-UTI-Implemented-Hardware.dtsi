@@ -27,14 +27,14 @@
 		stdout-path = "serial0:115200n8";
 	};
 	
-	reg_sdhi1_vmmc: regulator-sdhi1 {
+	/*reg_sdhi1_vmmc: regulator-sdhi1 {
 		compatible = "regulator-fixed";
 		regulator-name = "WLAN_EN";
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl>; 
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
-		gpio = <&pinctrl RZG2L_GPIO(46, 0) GPIO_ACTIVE_HIGH>; /* WiFi Wake */
+		gpio = <&pinctrl RZG2L_GPIO(46, 0) GPIO_ACTIVE_HIGH>; // WiFi Wake 
 		enable-active-high;
 	};	
 	
@@ -42,10 +42,10 @@
 		compatible = "mmc-pwrseq-simple";
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl>; 
-		reset-gpios = <&pinctrl RZG2L_GPIO(46, 1) GPIO_ACTIVE_LOW>; /* WiFi reset */
+		reset-gpios = <&pinctrl RZG2L_GPIO(46, 1) GPIO_ACTIVE_LOW>; // WiFi reset 
 		post-power-on-delay-ms = <200>;
 		//status = "okay";
-	};
+	};*/
 	
 	bt_sco_codec: bt_sco_codec {
 		#sound-dai-cells = <1>;
@@ -313,18 +313,18 @@
 		};
 		
 		//TEMPORARY??
-		/*WIFI_WAKE {
+		WIFI_WAKE {
 		        label = "WiFiWake";
 		   	gpios = <&pinctrl RZG2L_GPIO(46, 0) GPIO_ACTIVE_HIGH>;
 		   	default-state = "on";
-		};*/
+		};
 		
 		//TEMPORARY
-		/*WIFI_RESET {
+		WIFI_RESET {
 		        label = "WiFiReset";
 		   	gpios = <&pinctrl RZG2L_GPIO(46, 1) GPIO_ACTIVE_LOW>;
 		   	default-state = "off";
-		};*/
+		};
 		
 		//TEMPORARY - this is for power savings, we could hog this high eventually
 		WIFI_BT_PD {
@@ -385,13 +385,13 @@
 	};
 	
 
-	usb0_vbus_otg: regulator-usb0-vbus-otg {
+	/*usb0_vbus_otg: regulator-usb0-vbus-otg {
 		compatible = "regulator-fixed";
 
 		regulator-name = "USB0_VBUS_OTG";
 		regulator-min-microvolt = <5000000>;
 		regulator-max-microvolt = <5000000>;
-	};
+	};*/
 
 	vccq_sdhi1: regulator-vccq-sdhi1 {
 		compatible = "regulator-gpio";
@@ -503,7 +503,7 @@
 	pinctrl-0 = <&sdhi1_pins>;
 	pinctrl-1 = <&sdhi1_pins_uhs>;
 	pinctrl-names = "default", "state_uhs";
-	mmc-pwrseq = <&wifi_pwrseq>; /* W_DISABLE# */
+	//mmc-pwrseq = <&wifi_pwrseq>; /* W_DISABLE# */
 
 	keep-power-in-suspend;
 	non-removable;
