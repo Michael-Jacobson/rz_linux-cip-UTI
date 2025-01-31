@@ -30,8 +30,8 @@
 	reg_sdhi1_vmmc: regulator-sdhi1 {
 		compatible = "regulator-fixed";
 		regulator-name = "WLAN_EN";
-		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl>; 
+		//pinctrl-names = "default";
+		//pinctrl-0 = <&pinctrl>; 
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
 		//gpio = <&pinctrl RZG2L_GPIO(46, 0) GPIO_ACTIVE_HIGH>; // WiFi Wake 
@@ -43,7 +43,7 @@
 	wifi_pwrseq: wifi-pwrseq {
 		compatible = "mmc-pwrseq-simple";
 		pinctrl-names = "default";
-		pinctrl-0 = <&pinctrl>; 
+		//pinctrl-0 = <&pinctrl>; 
 		reset-gpios = <&pinctrl RZG2L_GPIO(46, 1) GPIO_ACTIVE_LOW>; // WiFi reset 
 		post-power-on-delay-ms = <200>;
 		//status = "okay";
