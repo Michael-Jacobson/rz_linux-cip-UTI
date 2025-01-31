@@ -502,6 +502,7 @@
 	pinctrl-1 = <&sdhi1_pins_uhs>;
 	pinctrl-names = "default", "state_uhs";
 	mmc-pwrseq = <&wifi_pwrseq>; 
+	vqmmc-supply = <&vccq_sdhi1>;
 	vmmc-supply = <&reg_sdhi1_vmmc>;
 
 	keep-power-in-suspend;
