@@ -35,7 +35,7 @@
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
 		//gpio = <&pinctrl RZG2L_GPIO(46, 0) GPIO_ACTIVE_HIGH>; // WiFi Wake 
-		enable-active-high;
+		//enable-active-high;
 		regulator-boot-on;
 		regulator-always-on;
 	};	
