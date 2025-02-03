@@ -493,6 +493,7 @@
 	
 	bluetooth {
 		compatible = "nxp,88w8997-bt";
+		fw-init-baudrate = <3000000>;
 		//device-wakeup-gpios = <&pinctrl RZG2L_GPIO(46, 3) GPIO_ACTIVE_HIGH>; add in when driver is patched
 	};	
 };
@@ -508,7 +509,7 @@
 	keep-power-in-suspend;
 	non-removable;
 	//wakeup-source;
-	fsl,sdio-async-interrupt-enabled;
+	//fsl,sdio-async-interrupt-enabled;
 
 	bus-width = <4>;
 	#address-cells = <1>;
