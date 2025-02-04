@@ -342,7 +342,7 @@
 		BT_RESET {
 		        label = "BTReset";
 		   	gpios = <&pinctrl RZG2L_GPIO(47, 0) GPIO_ACTIVE_LOW>;
-		   	default-state = "off";
+		   	default-state = "on";
 		};
    	};
    
@@ -495,6 +495,7 @@
 		compatible = "nxp,88w8997-bt";
 		fw-init-baudrate = <3000000>;
 		//device-wakeup-gpios = <&pinctrl RZG2L_GPIO(46, 3) GPIO_ACTIVE_HIGH>; add in when driver is patched
+		status = "okay";
 	};	
 };
 
