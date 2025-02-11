@@ -29,6 +29,8 @@
 #include <linux/init.h>
 #include <linux/interrupt.h>
 #include <linux/ioport.h>
+#include <linux/irq.h>
+#include <linux/irqdesc.h>
 #include <linux/ktime.h>
 #include <linux/major.h>
 #include <linux/minmax.h>
@@ -1315,13 +1317,18 @@ static void start_hrtimer_us(struct hrtimer *hrt, unsigned long usec)
 static void sci_dma_rx_reenable_irq(struct sci_port *s)
 {
 	struct uart_port *port = &s->port;
+	struct irq_desc *desc;
 	u16 scr;
 
 	/* Direct new serial port interrupts back to CPU */
 	scr = serial_port_in(port, SCSCR);
 	if (port->type == PORT_SCIFA || port->type == PORT_SCIFB ||
 	    s->cfg->regtype == SCIx_RZ_SCIFA_REGTYPE) {
-		enable_irq(s->irqs[SCIx_RXI_IRQ]);
+		desc = irq_to_desc(s->irqs[SCIx_RXI_IRQ]);
+
+                if (desc && desc->depth > 0)
+                       enable_irq(s->irqs[SCIx_RXI_IRQ]);
+                       
 		if (s->cfg->regtype == SCIx_RZ_SCIFA_REGTYPE)
 			scif_set_rtrg(port, s->rx_trigger);
 		else
