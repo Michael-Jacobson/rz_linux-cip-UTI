@@ -1324,11 +1324,11 @@ static void sci_dma_rx_reenable_irq(struct sci_port *s)
 	scr = serial_port_in(port, SCSCR);
 	if (port->type == PORT_SCIFA || port->type == PORT_SCIFB ||
 	    s->cfg->regtype == SCIx_RZ_SCIFA_REGTYPE) {
-	        enable_irq(s->irqs[SCIx_RXI_IRQ]);
-		/*desc = irq_to_desc(s->irqs[SCIx_RXI_IRQ]);
+	        //enable_irq(s->irqs[SCIx_RXI_IRQ]);
+		desc = irq_to_desc(s->irqs[SCIx_RXI_IRQ]);
 
                 if (desc && desc->depth > 0)
-                       enable_irq(s->irqs[SCIx_RXI_IRQ]);*/
+                       enable_irq(s->irqs[SCIx_RXI_IRQ]);
                        
 		if (s->cfg->regtype == SCIx_RZ_SCIFA_REGTYPE)
 			scif_set_rtrg(port, s->rx_trigger);
