@@ -591,7 +591,7 @@
 &mtu3 {
 	pinctrl-0 = <&mtu_pwm_pins>;
 	pinctrl-names = "default";
-	//#pwm-cells = <2>;
+	#pwm-cells = <2>;
 
 	// Enable PWM mode 1 out for MTIOC2A pins. 
 	//pwm_mode1 = <3 0>;  
