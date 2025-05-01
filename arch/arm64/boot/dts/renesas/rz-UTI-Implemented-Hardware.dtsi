@@ -85,7 +85,7 @@
 	
         lcd_bl: backlight {
 		compatible = "pwm-backlight";
-		pwms = <&backlight_pwm 0 1200>;
+		pwms = <&mtu3 0 1200>;
 		brightness-levels = <0 50 70 90 110 130 150 170 190 210 255>;
 		default-brightness-level = <10>;
 		power-supply = <&reg_3p3v>;
@@ -588,7 +588,7 @@
 };
 
 
-&backlight_pwm {
+&mtu3 {
 	pinctrl-0 = <&mtu_pwm_pins>;
 	pinctrl-names = "default";
 	//#pwm-cells = <2>;
