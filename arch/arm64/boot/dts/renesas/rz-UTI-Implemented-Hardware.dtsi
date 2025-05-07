@@ -454,13 +454,17 @@
 };
 
 &i2c1 {
+        pinctrl-0 = <&i2c1_pins>;
+	pinctrl-names = "default";
+	clock-frequency = <100000>;
+	
 	gt911@5d {
 		compatible = "goodix,gt911";
 		reg = <0x5d>;
 		interrupt-parent = <&pinctrl>;
 		interrupts = <RZG2L_GPIO(3, 0) IRQ_TYPE_EDGE_FALLING>;
 		irq-gpios = <&pinctrl RZG2L_GPIO(3, 0) GPIO_ACTIVE_LOW>;
-		reset-gpios = <&pinctrl RZG2L_GPIO(8, 2) (GPIO_ACTIVE_LOW | GPIO_PULL_DOWN)>;	
+		reset-gpios = <&pinctrl RZG2L_GPIO(8, 2) (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;	
 		AVDD28-supply = <&reg_3p3v>;
 		VDDIO-supply = <&reg_3p3v>;
 		touchscreen-size-x = <1024>;
