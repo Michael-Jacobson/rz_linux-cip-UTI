@@ -609,6 +609,7 @@
 &mtu3 {
 	pinctrl-0 = <&mtu3_pins>;
 	pinctrl-names = "default";
+	#pwm-cells = <2>;
 	
 	pwm_mode1 = <2 0>; //MTIOC2A
 
