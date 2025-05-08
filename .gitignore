@@ -148,6 +148,7 @@ x509.genkey
 # Kconfig savedefconfig output
 /defconfig
 arch/arm64/configs/my_defconfig
+arch/arm64/configs/defconfig.rej
 
 # Kdevelop4
 *.kdev4
