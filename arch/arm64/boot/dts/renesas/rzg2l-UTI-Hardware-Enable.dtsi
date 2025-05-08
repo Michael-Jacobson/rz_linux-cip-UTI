@@ -433,6 +433,9 @@
     status = "okay";
 };
 
+&spi1 {
+	status = "disabled";
+};
 
 &mtu3 {
 	status = "okay";
