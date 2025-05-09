@@ -29,7 +29,7 @@
 
 	mtu3_pins: mtu3 {
 		pinmux =
-		        <RZG2L_PORT_PINMUX(9, 0, 4)>, /* MTIOC2A */
+		        <RZG2L_PORT_PINMUX(9, 0, 4)>; /* MTIOC2A */
 	};
 
 	scif0_pins: scif0 {
