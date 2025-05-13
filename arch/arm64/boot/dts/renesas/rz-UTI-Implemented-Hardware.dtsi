@@ -456,7 +456,7 @@
 &i2c1 {
         pinctrl-0 = <&i2c1_pins>;
 	pinctrl-names = "default";
-	clock-frequency = <100000>;
+	clock-frequency = <200000>;
 	
 	gt911@5d {
 		compatible = "goodix,gt911";
