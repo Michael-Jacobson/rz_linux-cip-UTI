@@ -86,7 +86,8 @@
         lcd_bl: backlight {
 		compatible = "pwm-backlight";
 		pwms = <&mtu3 0 1200>;
-		brightness-levels = <0 50 70 90 110 130 150 170 190 210 255>;
+		//brightness-levels = <0 50 70 90 110 130 150 170 190 210 255>;
+		brightness-levels = <0 6553 13106 19659 26212 32765 39318 45871 52424 58977 65535>;
 		default-brightness-level = <10>;
 		power-supply = <&reg_3p3v>;
 	};
@@ -612,8 +613,6 @@
 	#pwm-cells = <2>;
 	
 	pwm_mode1 = <2 0>; //MTIOC2A
-
-        status = "okay";
 };
 
 
