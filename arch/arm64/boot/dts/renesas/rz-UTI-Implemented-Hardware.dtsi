@@ -568,7 +568,7 @@
 				         */
 	        panel-width-mm = <68>;
 	        panel-height-mm = <121>;
-	        backlight = <&lcd_bl>;
+	        //backlight = <&lcd_bl>;
 	        status = "okay";
 
 	        display-timings { //kernel
