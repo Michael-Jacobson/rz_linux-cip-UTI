@@ -86,14 +86,6 @@
 		input-enable;
 	};
 
-#if (!MTU3_PWM_SUPPORT)
-	spi1_pins: spi1 {
-		pinmux = <RZG2L_PORT_PINMUX(44, 0, 1)>, /* CK */
-			 <RZG2L_PORT_PINMUX(44, 1, 1)>, /* MOSI */
-			 <RZG2L_PORT_PINMUX(44, 2, 1)>, /* MISO */
-			 <RZG2L_PORT_PINMUX(44, 3, 1)>; /* SSL */
-	};
-#endif
 
 	ssi0_pins: ssi0 {
 		pinmux = <RZG2L_PORT_PINMUX(35, 0, 3)>, /* BCK */
@@ -238,29 +230,5 @@
 	        };
 	};
 	
-	/*keyboard_pins: keyboard0 {
-	        keyboard_rows {
-	                pinmux = <RZG2L_PORT_PINMUX(0, 0, 1)>, 
-			         <RZG2L_PORT_PINMUX(0, 1, 1)>, 
-			         <RZG2L_PORT_PINMUX(1, 0, 1)>, 
-			         <RZG2L_PORT_PINMUX(1, 1, 1)>, 
-			         <RZG2L_PORT_PINMUX(2, 0, 1)>; 
-		 };
-		 
-		 keyboard_cols {
-		        pinmux = <RZG2L_PORT_PINMUX(12, 1, 0)>, 
-			         <RZG2L_PORT_PINMUX(13, 0, 0)>, 
-			         <RZG2L_PORT_PINMUX(13, 1, 0)>, 
-			         <RZG2L_PORT_PINMUX(13, 2, 0)>;
-		 };
-	};*/
-	
-	/*
-	GPIO_Keys_IRQ_Pins: gpiokeys0 {
-	        pinmux = <RZG2L_PORT_PINMUX(2, 1, 1)>, 
-          	         <RZG2L_PORT_PINMUX(3, 1, 1)>;
-	};
-	*/
-
 };
 

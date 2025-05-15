@@ -85,45 +85,11 @@
 	
         lcd_bl: backlight {
 		compatible = "pwm-backlight";
-		pwms = <&mtu3 0 833333>;
+		pwms = <&gpt2 0 833333>;
 		brightness-levels = <0 50 70 90 110 130 150 170 190 210 255>;
 		default-brightness-level = <10>;
 		power-supply = <&reg_3p3v>;
 	};
-
-/*
-	gpio_keys { //this is for input GPIOs only
-		compatible = "gpio-keys";
-		#address-cells = <1>;
-		#size-cells = <0>;
-		pinctrl-0 = <&GPIO_Keys_IRQ_Pins>;
-		autorepeat;
-		
-		HookSwitch {
-			label = "Handset Offhook";
-			linux,code = <0x07>;
-			//wakeup-source;
-            		//interrupt-parent = <&intc_ex>;
-            		//gpios = <&pinctrl RZG2L_GPIO(3, 1) (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-            		//irq-gpios = <&pinctrl RZG2L_GPIO(3, 1) (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-            		//interrupts = <7 IRQ_TYPE_EDGE_BOTH>;
-            		//linux,input-type = <5>; //EV_SW
-			debounce-interval = <10>; 
-		};	
-		
-		RingDetect {
-			label = "RingDetect"; 
-			linux,code = <0x08>;
-			wakeup-source;
-            		interrupt-parent = <&intc_ex>;
-            		//gpios = <&pinctrl RZG2L_GPIO(2, 1) GPIO_ACTIVE_LOW>;
-            		//irq-gpios = <&pinctrl RZG2L_GPIO(2, 1) GPIO_ACTIVE_LOW>;
-            		interrupts = <5 IRQ_TYPE_EDGE_BOTH>;
-            		//linux,input-type = <5>; //EV_SW
-			debounce-interval = <1>;
-		};
-	};
-	*/
 	
 	gpio_keys_polled { //this is for input GPIOs only
 		compatible = "gpio-keys-polled";
@@ -383,14 +349,6 @@
 	};
 	
 
-	/*usb0_vbus_otg: regulator-usb0-vbus-otg {
-		compatible = "regulator-fixed";
-
-		regulator-name = "USB0_VBUS_OTG";
-		regulator-min-microvolt = <5000000>;
-		regulator-max-microvolt = <5000000>;
-	};*/
-
 	vccq_sdhi1: regulator-vccq-sdhi1 {
 		compatible = "regulator-gpio";
 		regulator-name = "SDHI1 VccQ";
@@ -620,7 +578,5 @@
 	channel = "channel_B";
 	
 	poeg = <&poega &poegb &poegc &poegd>;
-
-	status = "okay";
 };
 

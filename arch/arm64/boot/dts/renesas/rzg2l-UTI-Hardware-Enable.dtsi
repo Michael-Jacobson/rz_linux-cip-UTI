@@ -18,34 +18,8 @@
  */
 #define SDHI	(!EMMC)
 
-/* Select function support POEGD (1: enabled, 0 : disabled) */
-
-#define POEGD_SUPPORT           1
 
 /*
- * MTU3 macros are created to support setting pinctrl and properties in order
- * to use MTU3 functions. However, their pins on PMODs are mixed with SCIF2
- * and SPI1, so we must disable these modules to avoid conflict.
- * - MTU3_PWM_SUPPORT: Disable SPI1 to support PWM of channel3. By default, PWM
- *   mode 1 of MTIOC3A will be selected.
- * - MTU3_PWM_COMPLEMENTARY_SELECT: Enable this macro to select complementary PWM
- *   mode of MTU3 channel3 instead of PWM mode 1. This mode depends on macro
- *   MTU3_PWM_SUPPORT.
- * - MTU3_PHASE_COUNTING_SUPPORT: Disable SCIF2 to support phase counting functions.
- * - MTU3_32BIT_PHASE_COUNTING_SELECT: Select 32-bit phase counting mode.
- *   This mode depends on macro MTU3_PHASE_COUNTING_SUPPORT.
- */
-#define MTU3_PWM_SUPPORT			1
-#define MTU3_PWM_COMPLEMENTARY_SELECT		0
-#define MTU3_PHASE_COUNTING_SUPPORT		0
-#define MTU3_32BIT_PHASE_COUNTING_SELECT	0
-
-/*
- * POE3_SUPPORT is used to enable POE3 to control Hi-Z state of complementary PWM
- * signals at MTIOC3B-MTIOC3D. Note: This macro must be enabled along with macros
- * MTU3_PWM_SUPPORT and MTU3_PWM_COMPLEMENTARY_SELECT to fully take effect.
- */
-#define POE3_SUPPORT				0
 
 / {
 	aliases {
@@ -134,15 +108,6 @@
 		regulator-always-on;
 	};
 };
-
-/*&adc {
-	pinctrl-0 = <&adc_pins>;
-	pinctrl-names = "default";
-	status = "okay";
-
-	/delete-node/ channel@6;
-	/delete-node/ channel@7;
-};*/
 
 &eth0 {
 	pinctrl-0 = <&eth0_pins>;
@@ -297,7 +262,6 @@
 	timeout-sec = <60>;
 };
 
-#if (POEGD_SUPPORT)
 &poega {
 	status = "okay";
 };
@@ -313,17 +277,10 @@
 &poegd {
 	status = "okay";
 };
-#endif
 
-/*&gpt4 {
-	pinctrl-0 = <&gpt4_pins>;
-	pinctrl-names = "default";
-	channel = "both_AB";
-#if (POEGD_SUPPORT)
-	poeg = <&poega &poegb &poegc &poegd>;
-#endif
+&gpt2 {
 	status = "okay";
-};*/
+};
 
 &ehci0 {
 	memory-region = <&global_cma>;
@@ -441,14 +398,5 @@
 	status = "okay";
 };
 
-#if (MTU3_PWM_SUPPORT && MTU3_PWM_COMPLEMENTARY_SELECT && POE3_SUPPORT)
-&poe3 {
-	status = "okay";
-
-	mtu3_ch34 {
-		mtu3_outputs = <0>; /* MTIOC3B-MTIOC3D */
-	};
-};
-#endif
 
 
