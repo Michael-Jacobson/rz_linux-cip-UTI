@@ -19,8 +19,6 @@
 #define SDHI	(!EMMC)
 
 
-/*
-
 / {
 	aliases {
 		i2c3 = &i2c3;
