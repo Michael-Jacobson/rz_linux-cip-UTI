@@ -83,14 +83,14 @@
 		default-on;
 	};*/
 	
-        /*lcd_bl: backlight {
+        lcd_bl: backlight {
 		compatible = "pwm-backlight";
 		pwms = <&mtu3 0 1200>;
-		//brightness-levels = <0 50 70 90 110 130 150 170 190 210 255>;
-		brightness-levels = <0 6553 13106 19659 26212 32765 39318 45871 52424 58977 65535>;
+		brightness-levels = <0 50 70 90 110 130 150 170 190 210 255>;
+		//brightness-levels = <0 6553 13106 19659 26212 32765 39318 45871 52424 58977 65535>;
 		default-brightness-level = <10>;
 		power-supply = <&reg_3p3v>;
-	};*/
+	};
 
 /*
 	gpio_keys { //this is for input GPIOs only
@@ -145,7 +145,7 @@
 			debounce-interval = <10>; 
 		};	
 		
-		RingDetect {
+		/*RingDetect {
 			label = "RingDetect"; 
 			linux,code = <0x08>;
 			//wakeup-source;
@@ -155,7 +155,7 @@
             		//interrupts = <5 IRQ_TYPE_EDGE_BOTH>;
             		linux,input-type = <5>; //EV_SW
 			debounce-interval = <1>;
-		};
+		};*/
 		
 		LineInUse {
 			label = "LineInUse"; 
@@ -568,7 +568,7 @@
 				         */
 	        panel-width-mm = <68>;
 	        panel-height-mm = <121>;
-	        //backlight = <&lcd_bl>;
+	        backlight = <&lcd_bl>;
 	        status = "okay";
 
 	        display-timings { //kernel
@@ -615,5 +615,11 @@
 	pwm_mode1 = <2 0>; //MTIOC2A
 };
 
+&gpt2 {
+	pinctrl-0 = <&gpt2_pins>;
+	pinctrl-names = "default";
+	channel = "channel_B";
 
+	status = "okay";
+};
 
