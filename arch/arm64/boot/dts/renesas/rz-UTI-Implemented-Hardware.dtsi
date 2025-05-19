@@ -83,13 +83,13 @@
 		default-on;
 	};*/
 	
-        /*lcd_bl: backlight {
+        lcd_bl: backlight {
 		compatible = "pwm-backlight";
 		pwms = <&gpt2 0 833333>;
 		brightness-levels = <0 50 70 90 110 130 150 170 190 210 255>;
-		default-brightness-level = <10>;
+		default-brightness-level = <9>;
 		power-supply = <&reg_3p3v>;
-	};*/
+	};
 	
 	gpio_keys_polled { //this is for input GPIOs only
 		compatible = "gpio-keys-polled";
@@ -525,16 +525,8 @@
 				         */
 	        panel-width-mm = <68>;
 	        panel-height-mm = <121>;
-	        //backlight = <&lcd_bl>;
+	        backlight = <&lcd_bl>;
 	        status = "okay";
-	        
-	        backlight {
-		        compatible = "pwm-backlight";
-		        pwms = <&gpt2 0 833333>;
-		        brightness-levels = <0 50 70 90 110 130 150 170 190 210 255>;
-		        default-brightness-level = <10>;
-		        power-supply = <&reg_3p3v>;
-	        };
 
 	        display-timings { //kernel
 
@@ -572,13 +564,13 @@
 };
 
 
-&mtu3 {
+/*&mtu3 {
 	pinctrl-0 = <&mtu3_pins>;
 	pinctrl-names = "default";
 	#pwm-cells = <2>;
 	
 	pwm_mode1 = <2 0>; //MTIOC2A
-};
+};*/
 
 &gpt2 {
 	pinctrl-0 = <&gpt2_pins>;
