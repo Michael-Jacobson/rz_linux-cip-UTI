@@ -22,11 +22,6 @@
 		input-enable;
 	};
 
-	i2c3_pins: i2c3 {
-		pinmux = <RZG2L_PORT_PINMUX(18, 0, 3)>, /* SDA */
-			 <RZG2L_PORT_PINMUX(18, 1, 3)>; /* SCL */
-	};
-
 	mtu3_pins: mtu3 {
 		pinmux =
 		        <RZG2L_PORT_PINMUX(9, 0, 4)>; /* MTIOC2A */
@@ -42,6 +37,7 @@
 			 <RZG2L_PORT_PINMUX(38, 1, 1)>;	/* RxD */
 	};
 
+        /* bluetooth */
 	scif2_pins: scif2 {
 		pinmux = <RZG2L_PORT_PINMUX(4, 0, 2)>, /* TxD */
 			 <RZG2L_PORT_PINMUX(4, 1, 2)>, /* RxD */
@@ -49,6 +45,7 @@
 			 <RZG2L_PORT_PINMUX(5, 2, 2)>; /* RTS# */
 	};
 
+        /* wifi */
 	sdhi1_pins: sd1 {
 		sd1_data {
 			pins = "SD1_DATA0", "SD1_DATA1", "SD1_DATA2", "SD1_DATA3";
@@ -59,10 +56,6 @@
 			pins = "SD1_CLK", "SD1_CMD";
 			power-source = <3300>;
 		};
-
-		/*sd1_mux {
-			pinmux = <RZG2L_PORT_PINMUX(19, 0, 1)>; // SD1_CD 
-		};*/
 	};
 
 	sdhi1_pins_uhs: sd1_uhs {
@@ -75,10 +68,6 @@
 			pins = "SD1_CLK", "SD1_CMD";
 			power-source = <1800>;
 		};
-
-		/*sd1_mux_uhs {
-			pinmux = <RZG2L_PORT_PINMUX(19, 0, 1)>; // SD1_CD 
-		};*/
 	};
 
 	sound_clk_pins: sound_clk {
@@ -86,7 +75,7 @@
 		input-enable;
 	};
 
-
+        /* codec audio */
 	ssi0_pins: ssi0 {
 		pinmux = <RZG2L_PORT_PINMUX(35, 0, 3)>, /* BCK */
 			 <RZG2L_PORT_PINMUX(35, 1, 3)>, /* RCK */
@@ -99,18 +88,6 @@
 			 <RZG2L_PORT_PINMUX(14, 1, 2)>, /* RCK */
 			 <RZG2L_PORT_PINMUX(15, 0, 2)>, /* TXD */
 			 <RZG2L_PORT_PINMUX(15, 1, 2)>; /* RXD */
-	};
-		
-
-	/*usb0_pins: usb0 {
-		pinmux = //<RZG2L_PORT_PINMUX(4, 0, 1)>, // VBUS 
-			 <RZG2L_PORT_PINMUX(5, 0, 1)>, // OVC 
-			 <RZG2L_PORT_PINMUX(5, 1, 1)>; // OTG_ID 
-	};*/
-
-	usb1_pins: usb1 {
-		pinmux = <RZG2L_PORT_PINMUX(42, 0, 1)>, /* VBUS */
-			 <RZG2L_PORT_PINMUX(42, 1, 1)>; /* OVC */
 	};
 	
 	eth0_pins: eth0 {
@@ -148,20 +125,6 @@
 			pins = "QSPI0_SPCLK", "QSPI0_SSL", "QSPI_RESET#";
 			power-source = <1800>;
 		};
-	};
-
-	/*
-	 * SD0 device selection is XOR between GPIO_SD0_DEV_SEL and SW1[2]
-	 * The below switch logic can be used to select the device between
-	 * eMMC and microSD, after setting GPIO_SD0_DEV_SEL to high in DT.
-	 * SW1[2] should be at position 2/OFF to enable 64 GB eMMC
-	 * SW1[2] should be at position 3/ON to enable uSD card CN3
-	 */
-	sd0-dev-sel-hog {
-		gpio-hog;
-		gpios = <RZG2L_GPIO(41, 1) GPIO_ACTIVE_HIGH>;
-		output-high;
-		line-name = "sd0_dev_sel";
 	};
 
 	sdhi0_emmc_pins: sd0emmc {

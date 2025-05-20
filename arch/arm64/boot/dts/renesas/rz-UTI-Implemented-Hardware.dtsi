@@ -14,7 +14,6 @@
 		serial0 = &scif0;
 		i2c0 = &i2c0;
 		i2c1 = &i2c1;
-		i2c3 = &i2c3;
 		mmc0 = &sdhi0;
 		mmc1 = &sdhi1;
 		dsi0 = &dsi0;
