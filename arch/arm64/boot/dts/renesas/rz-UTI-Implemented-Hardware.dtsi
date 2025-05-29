@@ -84,7 +84,7 @@
 	
         lcd_bl: backlight {
 		compatible = "pwm-backlight";
-		pwms = <&gpt2 0 833333>;
+		pwms = <&mtu3 0 833333>;
 		brightness-levels = <0 50 70 90 110 130 150 170 190 210 255>;
 		default-brightness-level = <9>;
 		power-supply = <&reg_3p3v>;
@@ -563,19 +563,19 @@
 };
 
 
-/*&mtu3 {
+&mtu3 {
 	pinctrl-0 = <&mtu3_pins>;
 	pinctrl-names = "default";
 	#pwm-cells = <2>;
 	
 	pwm_mode1 = <2 0>; //MTIOC2A
-};*/
+};
 
-&gpt2 {
+/*&gpt2 {
 	pinctrl-0 = <&gpt2_pins>;
 	pinctrl-names = "default";
 	channel = "channel_B";
 	
 	poeg = <&poega &poegb &poegc &poegd>;
-};
+};*/
 
