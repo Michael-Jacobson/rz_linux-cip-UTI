@@ -8,17 +8,6 @@
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
 
-/* SW1[2] should be at position 2/OFF to enable 64 GB eMMC */
-#define EMMC	1
-
-/*
- * To enable uSD card on CN3,
- * SW1[2] should be at position 3/ON.
- * Disable eMMC by setting "#define EMMC	0" above.
- */
-#define SDHI	(!EMMC)
-
-
 / {
 	aliases {
 		i2c3 = &i2c3;
@@ -114,7 +103,7 @@
 	phy-mode = "gmii-id";
 	status = "okay";
 	
-	local-mac-address = [00 1B C4 03 D0 8F];
+	//local-mac-address = [00 1B C4 03 D0 8F]; **NOTE: this cannot be overridden easily so do not put in device tree
 
 	phy0: ethernet-phy@1 {
 		compatible = "ethernet-phy-id0022.1640",
@@ -201,22 +190,6 @@
 	};
 };
 
-#if SDHI
-&sdhi0 {
-	pinctrl-0 = <&sdhi0_pins>;
-	pinctrl-1 = <&sdhi0_pins_uhs>;
-	pinctrl-names = "default", "state_uhs";
-
-	vmmc-supply = <&reg_3p3v>;
-	vqmmc-supply = <&vccq_sdhi0>;
-	bus-width = <4>;
-	sd-uhs-sdr50;
-	sd-uhs-sdr104;
-	status = "okay";
-};
-#endif
-
-#if EMMC
 &sdhi0 {
 	pinctrl-0 = <&sdhi0_emmc_pins>;
 	pinctrl-1 = <&sdhi0_emmc_pins>;
@@ -230,7 +203,6 @@
 	fixed-emmc-driver-type = <1>;
 	status = "okay";
 };
-#endif
 
 &sdhi1 {
         status = "okay";
