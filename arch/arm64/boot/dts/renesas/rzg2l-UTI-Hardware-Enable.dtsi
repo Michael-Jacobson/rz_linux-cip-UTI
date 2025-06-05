@@ -103,7 +103,8 @@
 	phy-mode = "gmii-id";
 	status = "okay";
 	
-	//local-mac-address = [00 1B C4 03 D0 8F]; **NOTE: this cannot be overridden easily so do not put in device tree
+	//local-mac-address = [00 1B C4 03 D0 8F]; **NOTE: this cannot be overridden easily so do not put in device tree. it is handled in uboot:
+	//in include/configs/UTI_rzg2l_board.h
 
 	phy0: ethernet-phy@1 {
 		compatible = "ethernet-phy-id0022.1640",
