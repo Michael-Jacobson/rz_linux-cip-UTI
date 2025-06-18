@@ -233,7 +233,7 @@
 	timeout-sec = <60>;
 };
 
-&poega {
+/*&poega {
 	status = "okay";
 };
 
@@ -251,7 +251,7 @@
 
 &gpt2 {
 	status = "okay";
-};
+};*/
 
 &ehci0 {
 	memory-region = <&global_cma>;
