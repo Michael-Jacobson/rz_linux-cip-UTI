@@ -1,0 +1,373 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+/*
+ * Device Tree Source for the RZ/{G2L,V2L} SMARC SOM common parts
+ *
+ * Copyright (C) 2021 Renesas Electronics Corp.
+ */
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
+
+/ {
+	aliases {
+		i2c3 = &i2c3;
+		ethernet0 = &eth0;
+		ethernet1 = &eth1;
+	};
+
+	chosen {
+		bootargs = "ignore_loglevel rw root=/dev/nfs ip=on";
+	};
+
+	memory@48000000 {
+		device_type = "memory";
+		/* first 128MB is reserved for secure area. */
+		reg = <0x0 0x48000000 0x0 0x78000000>;
+	};
+
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		global_cma: linux,cma@58000000 {
+			compatible = "shared-dma-pool";
+			linux,cma-default;
+			reusable;
+			reg = <0x0 0x58000000 0x0 0x10000000>;
+		};
+		mmp_reserved: linux,multimedia {
+			compatible = "shared-dma-pool";
+			reusable;
+			reg = <0x00000000 0x68000000 0x0 0x8000000>;
+		};
+	};
+
+	mmngr {
+		compatible = "renesas,mmngr";
+		memory-region = <&mmp_reserved>;
+	};
+
+	mmngrbuf {
+		compatible = "renesas,mmngrbuf";
+	};
+
+	vspm_if {
+		compatible = "renesas,vspm_if";
+	};
+
+	reg_1p8v: regulator0 {
+		compatible = "regulator-fixed";
+		regulator-name = "fixed-1.8V";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		regulator-boot-on;
+		regulator-always-on;
+	};
+
+	reg_3p3v: regulator1 {
+		compatible = "regulator-fixed";
+		regulator-name = "fixed-3.3V";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-boot-on;
+		regulator-always-on;
+	};
+
+	reg_1p1v: regulator-vdd-core {
+		compatible = "regulator-fixed";
+		regulator-name = "fixed-1.1V";
+		regulator-min-microvolt = <1100000>;
+		regulator-max-microvolt = <1100000>;
+		regulator-boot-on;
+		regulator-always-on;
+	};
+
+	vccq_sdhi0: regulator-vccq-sdhi0 {
+		compatible = "regulator-gpio";
+
+		regulator-name = "SDHI0 VccQ";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <3300000>;
+		states = <3300000 1>, <1800000 0>;
+		regulator-boot-on;
+		gpios = <&pinctrl RZG2L_GPIO(39, 0) GPIO_ACTIVE_HIGH>;
+		regulator-always-on;
+	};
+};
+
+&eth0 {
+	pinctrl-0 = <&eth0_pins>;
+	pinctrl-names = "default";
+	phy-handle = <&phy0>;
+	phy-mode = "gmii-id";
+	status = "okay";
+	
+	//local-mac-address = [00 1B C4 03 D0 8F]; **NOTE: this cannot be overridden easily so do not put in device tree. it is handled in uboot:
+	//in include/configs/UTI_rzg2l_board.h
+
+	phy0: ethernet-phy@1 {
+		compatible = "ethernet-phy-id0022.1640",
+			     "ethernet-phy-ieee802.3-c22";
+		reg = <1>;
+		rxc-skew-psec = <2400>;
+		txc-skew-psec = <2400>;
+		rxdv-skew-psec = <0>;
+		txen-skew-psec = <0>;
+		rxd0-skew-psec = <0>;
+		rxd1-skew-psec = <0>;
+		rxd2-skew-psec = <0>;
+		rxd3-skew-psec = <0>;
+		txd0-skew-psec = <0>;
+		txd1-skew-psec = <0>;
+		txd2-skew-psec = <0>;
+		txd3-skew-psec = <0>;
+
+		interrupt-parent = <&pinctrl>;
+		//interrupts = <RZG2L_GPIO(1, 0) IRQ_TYPE_LEVEL_LOW>;
+	};
+};
+
+
+&extal_clk {
+	clock-frequency = <24000000>;
+};
+
+&gpu {
+	mali-supply = <&reg_1p1v>;
+};
+
+&ostm1 {
+	status = "okay";
+};
+
+&ostm2 {
+	status = "okay";
+};
+
+&sbc {
+	pinctrl-0 = <&qspi0_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+
+	flash@0 {
+		compatible = "micron,mt25qu512a", "jedec,spi-nor";
+		reg = <0>;
+		m25p,fast-read;
+		spi-max-frequency = <50000000>;
+		spi-rx-bus-width = <4>;
+		spi-tx-bus-width = <4>;
+
+		partitions {
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			partition@0000000 {
+				label = "u-boot";
+				reg = <0x00000000 0x80000>;
+				read-only;
+			};
+			partition@80000 {
+				label = "env";
+				reg = <0x00080000 0x40000>;
+				read-only;
+			};
+			partition@C0000 {
+				label = "dtb";
+				reg = <0x000C0000 0x40000>;
+				read-only;
+			};
+			partition@800000 {
+				label = "rootfs";
+				/* 16MB @ 8MB offset in SPI Flash */
+				reg = <0x00800000 0x01000000>;
+			};
+			partition@2000000 {
+				label = "test-area";
+				reg = <0x02000000 0x00100000>;
+			};
+		};
+	};
+};
+
+&sdhi0 {
+	pinctrl-0 = <&sdhi0_emmc_pins>;
+	pinctrl-1 = <&sdhi0_emmc_pins>;
+	pinctrl-names = "default", "state_uhs";
+
+	vmmc-supply = <&reg_3p3v>;
+	vqmmc-supply = <&reg_1p8v>;
+	bus-width = <8>;
+	mmc-hs200-1_8v;
+	non-removable;
+	fixed-emmc-driver-type = <1>;
+	status = "okay";
+};
+
+&sdhi1 {
+        status = "okay";
+};
+
+&ssi0 {
+        status = "okay";
+};
+
+&ssi1 {
+        status = "okay";
+};
+
+
+&wdt0 {
+	status = "okay";
+	timeout-sec = <60>;
+};
+
+&wdt1 {
+	status = "okay";
+	timeout-sec = <60>;
+};
+
+&wdt2 {
+	status = "okay";
+	timeout-sec = <60>;
+};
+
+/*&poega {
+	status = "okay";
+};
+
+&poegb {
+	status = "okay";
+};
+
+&poegc {
+	status = "okay";
+};
+
+&poegd {
+	status = "okay";
+};
+
+&gpt2 {
+	status = "okay";
+};*/
+
+&ehci0 {
+	memory-region = <&global_cma>;
+};
+
+&ohci0 {
+	memory-region = <&global_cma>;
+};
+
+&ehci1 {
+	memory-region = <&global_cma>;
+};
+
+&ohci1 {
+	memory-region = <&global_cma>;
+};
+
+&i2c0 {
+	status = "okay";
+};
+
+&i2c1 {
+	status = "okay";
+};
+
+&audio_clk1{
+	clock-frequency = <12288000>;
+};
+
+&audio_clk2{
+	clock-frequency = <12288000>;
+};
+
+
+/*&ehci0 { //USB
+	dr_mode = "otg";
+	status = "okay";
+};*/
+
+/*&ehci1 { //USB
+	status = "okay";
+};*/
+
+/*&hsusb { //USB
+	dr_mode = "otg";
+	status = "okay";
+};*/
+
+
+&i2c3 {
+	status = "okay";
+	//pinctrl-names = "default";
+	//pinctrl-0 = <&i2c3_pins>;		
+};
+
+/*&ohci0 { //USB
+	dr_mode = "otg";
+	status = "okay";
+};*/
+
+/*&ohci1 { //USB
+	status = "okay";
+};*/
+
+&phyrst {
+	status = "okay";
+};
+
+&scif0 {
+	status = "okay";
+};
+
+&scif2 { 
+        status = "okay";
+};
+
+
+/*&usb2_phy0 { //USB
+	pinctrl-0 = <&usb0_pins>;
+	pinctrl-names = "default";
+
+	vbus-supply = <&usb0_vbus_otg>;
+	status = "okay";
+};*/
+
+/*&usb2_phy1 { //USB
+	pinctrl-0 = <&usb1_pins>;
+	pinctrl-names = "default";
+
+	status = "okay";
+};*/
+
+&du {
+	status = "okay";
+};
+
+&dsi0 {
+        status = "okay";
+};
+
+&cru {
+	status = "okay";
+};
+
+
+&intc_ex {
+    status = "okay";
+};
+
+&spi1 {
+	status = "disabled";
+};
+
+&mtu3 {
+	status = "okay";
+};
+
+
+
