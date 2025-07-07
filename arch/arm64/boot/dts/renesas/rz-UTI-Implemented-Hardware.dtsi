@@ -317,6 +317,7 @@
 		simple-audio-card,format = "i2s";
 		simple-audio-card,bitclock-master = <&cpu_dai>;
 		simple-audio-card,frame-master = <&cpu_dai>;
+		simple-audio-card,mclk-fs = <8>;
 
 		simple-audio-card,widgets = 
 			"Speaker", "POTS Line Out",
@@ -340,7 +341,7 @@
 			system-clock-frequency = <12288000>;
 		};
 
-		sound0_master: simple-audio-card,codec {
+		codec_dai: simple-audio-card,codec {
 			sound-dai = <&tlv320aic3106>;
 			clocks = <&versa3 2>;
 			system-clock-frequency = <12288000>;

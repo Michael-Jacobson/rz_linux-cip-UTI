@@ -100,7 +100,7 @@
 	pinctrl-0 = <&eth0_pins>;
 	pinctrl-names = "default";
 	phy-handle = <&phy0>;
-	phy-mode = "gmii-id";
+	phy-mode = "rgmii-id";
 	status = "okay";
 	
 	//local-mac-address = [00 1B C4 03 D0 8F]; **NOTE: this cannot be overridden easily so do not put in device tree. it is handled in uboot:
@@ -110,6 +110,8 @@
 		compatible = "ethernet-phy-id0022.1640",
 			     "ethernet-phy-ieee802.3-c22";
 		reg = <1>;
+		interrupt-parent = <&irqc>;
+		//interrupts = <RZG2L_IRQ2 IRQ_TYPE_LEVEL_LOW>;
 		rxc-skew-psec = <2400>;
 		txc-skew-psec = <2400>;
 		rxdv-skew-psec = <0>;
@@ -122,9 +124,6 @@
 		txd1-skew-psec = <0>;
 		txd2-skew-psec = <0>;
 		txd3-skew-psec = <0>;
-
-		interrupt-parent = <&pinctrl>;
-		//interrupts = <RZG2L_GPIO(1, 0) IRQ_TYPE_LEVEL_LOW>;
 	};
 };
 
@@ -143,52 +142,6 @@
 
 &ostm2 {
 	status = "okay";
-};
-
-&sbc {
-	pinctrl-0 = <&qspi0_pins>;
-	pinctrl-names = "default";
-	status = "okay";
-
-	flash@0 {
-		compatible = "micron,mt25qu512a", "jedec,spi-nor";
-		reg = <0>;
-		m25p,fast-read;
-		spi-max-frequency = <50000000>;
-		spi-rx-bus-width = <4>;
-		spi-tx-bus-width = <4>;
-
-		partitions {
-			compatible = "fixed-partitions";
-			#address-cells = <1>;
-			#size-cells = <1>;
-
-			partition@0000000 {
-				label = "u-boot";
-				reg = <0x00000000 0x80000>;
-				read-only;
-			};
-			partition@80000 {
-				label = "env";
-				reg = <0x00080000 0x40000>;
-				read-only;
-			};
-			partition@C0000 {
-				label = "dtb";
-				reg = <0x000C0000 0x40000>;
-				read-only;
-			};
-			partition@800000 {
-				label = "rootfs";
-				/* 16MB @ 8MB offset in SPI Flash */
-				reg = <0x00800000 0x01000000>;
-			};
-			partition@2000000 {
-				label = "test-area";
-				reg = <0x02000000 0x00100000>;
-			};
-		};
-	};
 };
 
 &sdhi0 {
@@ -228,10 +181,6 @@
 	timeout-sec = <60>;
 };
 
-&wdt2 {
-	status = "okay";
-	timeout-sec = <60>;
-};
 
 /*&poega {
 	status = "okay";
