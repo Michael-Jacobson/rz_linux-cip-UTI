@@ -510,7 +510,7 @@
 	pinctrl-names = "default";
 };
 
-&dsi0 {	
+&dsi {	
 	#address-cells = <1>;
 	#size-cells = <0>;
 	
@@ -556,7 +556,7 @@
 			        reg = <0>;
 			        //dual-lvds-odd-pixels;
 			        panel_in: endpoint {
-				        remote-endpoint = <&dsi0_out>;
+				        remote-endpoint = <&dsi_out>;
 			        };
 		        };
 		};

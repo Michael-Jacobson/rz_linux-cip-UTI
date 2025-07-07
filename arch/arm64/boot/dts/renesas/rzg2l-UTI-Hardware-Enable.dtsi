@@ -297,7 +297,7 @@
 	status = "okay";
 };
 
-&dsi0 {
+&dsi {
         status = "okay";
 };
 
