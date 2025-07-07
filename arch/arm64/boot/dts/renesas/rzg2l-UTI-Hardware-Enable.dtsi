@@ -305,11 +305,6 @@
 	status = "okay";
 };
 
-
-&intc_ex {
-    status = "okay";
-};
-
 &spi1 {
 	status = "disabled";
 };
