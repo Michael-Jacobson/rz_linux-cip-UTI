@@ -8,6 +8,7 @@
 #include <linux/backlight.h>
 #include <linux/delay.h>
 #include <linux/gpio/consumer.h>
+#include <linux/media-bus-format.h>
 #include <linux/module.h>
 #include <linux/of.h>
 #include <linux/of_platform.h>
@@ -288,7 +289,7 @@ static int forlinx_panel_probe(struct mipi_dsi_device *dsi)
 	panel->pdata = of_id->data;
 
 	dsi->format = MIPI_DSI_FMT_RGB888;
-	dsi->mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_EOT_PACKET;
+	dsi->mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_NO_EOT_PACKET;
 
 	ret = of_property_read_u32(np, "video-mode", &video_mode);
 	if (!ret) {
@@ -362,7 +363,7 @@ static int forlinx_panel_probe(struct mipi_dsi_device *dsi)
 	return ret;
 }
 
-static int forlinx_panel_remove(struct mipi_dsi_device *dsi)
+static void forlinx_panel_remove(struct mipi_dsi_device *dsi)
 {
 	struct forlinx_panel *forlinx = mipi_dsi_get_drvdata(dsi);
 	struct device *dev = &dsi->dev;
@@ -378,9 +379,6 @@ static int forlinx_panel_remove(struct mipi_dsi_device *dsi)
 		put_device(&forlinx->backlight->dev);
 	if(forlinx->enable)
 		gpiod_set_value_cansleep(forlinx->enable, 0);
-
-
-	return 0;
 }
 
 static void forlinx_panel_shutdown(struct mipi_dsi_device *dsi)
