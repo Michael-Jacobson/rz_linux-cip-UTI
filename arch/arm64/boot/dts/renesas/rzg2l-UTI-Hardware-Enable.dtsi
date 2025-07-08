@@ -226,11 +226,11 @@
 	status = "okay";
 };
 
-&audio_clk1{
+&audio_clk1 {
 	clock-frequency = <12288000>;
 };
 
-&audio_clk2{
+&audio_clk2 {
 	clock-frequency = <12288000>;
 };
 

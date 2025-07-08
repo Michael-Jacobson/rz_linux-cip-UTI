@@ -850,10 +850,11 @@
 			};
 		};
 
-		dsi: dsi@10850000 {
+		dsi: dsi@10860000 {
 			compatible = "renesas,r9a07g044-mipi-dsi",
 				     "renesas,rzg2l-mipi-dsi";
-			reg = <0 0x10850000 0 0x20000>;
+			reg =	<0 0x10860000 0 0x10000>, /* LINK */
+				<0 0x10850000 0 0x10000>; /* DPHY */
 			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
@@ -1160,7 +1161,7 @@
 
 				port@0 {
 					reg = <0>;
-					du_out_dsi: endpoint {
+					du_out_rgb: endpoint {
 					};
 				};
 
