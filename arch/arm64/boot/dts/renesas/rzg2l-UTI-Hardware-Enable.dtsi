@@ -100,7 +100,7 @@
 	pinctrl-0 = <&eth0_pins>;
 	pinctrl-names = "default";
 	phy-handle = <&phy0>;
-	phy-mode = "gmii-id";
+	phy-mode = "rgmii-id";
 	status = "okay";
 	
 	//local-mac-address = [00 1B C4 03 D0 8F]; **NOTE: this cannot be overridden easily so do not put in device tree. it is handled in uboot:
