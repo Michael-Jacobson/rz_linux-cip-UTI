@@ -1119,7 +1119,6 @@
 				port@0 {
 					reg = <0>;
 					dsi0_in: endpoint {
-						remote-endpoint = <&du_out_dsi0>;
 					};
 				};
 
