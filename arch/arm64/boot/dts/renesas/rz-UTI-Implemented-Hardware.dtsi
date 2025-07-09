@@ -16,7 +16,7 @@
 		i2c1 = &i2c1;
 		mmc0 = &sdhi0;
 		mmc1 = &sdhi1;
-		dsi0 = &dsi0;
+		dsi = &dsi;
 		du = &du;
 		reg_1p8v = &reg_1p8v;
 		reg_3p3v = &reg_3p3v;
@@ -509,7 +509,7 @@
 	pinctrl-names = "default";
 };
 
-&dsi0 {	
+&dsi {	
 	#address-cells = <1>;
 	#size-cells = <0>;
 	
