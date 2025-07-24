@@ -84,7 +84,7 @@
 	
         lcd_bl: backlight {
 		compatible = "pwm-backlight";
-		pwms = <&mtu3 0 833333>;
+		pwms = <&pwm0 3 833333>;
 		brightness-levels = <0 50 70 90 110 130 150 170 190 210 255>;
 		default-brightness-level = <9>;
 		power-supply = <&reg_3p3v>;
@@ -569,8 +569,13 @@
 	pinctrl-names = "default";
 	#pwm-cells = <2>;
 	
-	pwm_mode1 = <2 0>; //MTIOC2A
+	//pwm_mode1 = <2 0>; //MTIOC2A
 	
 	status = "okay";
+	
+	pwm0: pwm@0 {
+               compatible = "renesas,pwm-rz-mtu3";
+               #pwm-cells = <2>;
+        };
 };
 

@@ -314,6 +314,7 @@ static const struct mfd_cell rz_mtu3_devs[] = {
 	},
 	{
 		.name = "pwm-rz-mtu3",
+		.of_compatible = "renesas,pwm-rz-mtu3",
 	},
 	{
 		.name = "rz-mtu3-clk",
