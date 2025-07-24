@@ -111,7 +111,6 @@
 			     "ethernet-phy-ieee802.3-c22";
 		reg = <1>;
 		interrupt-parent = <&irqc>;
-		//interrupts = <RZG2L_IRQ2 IRQ_TYPE_LEVEL_LOW>;
 		rxc-skew-psec = <2400>;
 		txc-skew-psec = <2400>;
 		rxdv-skew-psec = <0>;
@@ -181,7 +180,6 @@
 	timeout-sec = <60>;
 };
 
-
 /*&poega {
 	status = "okay";
 };
@@ -234,36 +232,11 @@
 	clock-frequency = <12288000>;
 };
 
-
-/*&ehci0 { //USB
-	dr_mode = "otg";
-	status = "okay";
-};*/
-
-/*&ehci1 { //USB
-	status = "okay";
-};*/
-
-/*&hsusb { //USB
-	dr_mode = "otg";
-	status = "okay";
-};*/
-
-
 &i2c3 {
 	status = "okay";
 	//pinctrl-names = "default";
 	//pinctrl-0 = <&i2c3_pins>;		
 };
-
-/*&ohci0 { //USB
-	dr_mode = "otg";
-	status = "okay";
-};*/
-
-/*&ohci1 { //USB
-	status = "okay";
-};*/
 
 &phyrst {
 	status = "okay";
@@ -277,21 +250,6 @@
         status = "okay";
 };
 
-
-/*&usb2_phy0 { //USB
-	pinctrl-0 = <&usb0_pins>;
-	pinctrl-names = "default";
-
-	vbus-supply = <&usb0_vbus_otg>;
-	status = "okay";
-};*/
-
-/*&usb2_phy1 { //USB
-	pinctrl-0 = <&usb1_pins>;
-	pinctrl-names = "default";
-
-	status = "okay";
-};*/
 
 &du {
 	status = "okay";

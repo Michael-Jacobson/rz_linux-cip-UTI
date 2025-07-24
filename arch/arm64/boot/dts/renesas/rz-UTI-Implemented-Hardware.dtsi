@@ -556,7 +556,7 @@
 			        reg = <0>;
 			        //dual-lvds-odd-pixels;
 			        panel_in: endpoint {
-				        remote-endpoint = <&dsi_out>;
+				        remote-endpoint = <&dsi0_out>;
 			        };
 		        };
 		};

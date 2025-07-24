@@ -13,14 +13,14 @@
 	#address-cells = <2>;
 	#size-cells = <2>;
 
-	audio_clk1: audio1-clk {
+	audio_clk1: audio_clk1 {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
 		/* This value must be overridden by boards that provide it */
 		clock-frequency = <0>;
 	};
 
-	audio_clk2: audio2-clk {
+	audio_clk2: audio_clk2 {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
 		/* This value must be overridden by boards that provide it */
@@ -882,13 +882,12 @@
 				port@0 {
 					reg = <0>;
 					dsi0_in: endpoint {
-						remote-endpoint = <&du_out_dsi>;
 					};
 				};
 
 				port@1 {
 					reg = <1>;
-					dsi_out: endpoint {
+					dsi0_out: endpoint {
 						remote-endpoint = <&panel_in>;
 						data-lanes = <1 2 3 4>;
 					};
@@ -1159,16 +1158,18 @@
 				port@0 {
 					reg = <0>;
 					du_out_dsi: endpoint {
-						remote-endpoint = <&dsi0_in>;
 					};
 				};
 
 				port@1 {
 					reg = <1>;
+					du_out_dsi0: endpoint {
+						remote-endpoint = <&dsi0_in>;
+					};
 				};
 			};
 		};
-
+		
 		cpg: clock-controller@11010000 {
 			compatible = "renesas,r9a07g044-cpg";
 			reg = <0 0x11010000 0 0x10000>;
