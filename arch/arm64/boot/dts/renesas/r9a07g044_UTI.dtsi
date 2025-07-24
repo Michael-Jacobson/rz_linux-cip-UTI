@@ -260,7 +260,6 @@
 			resets = <&cpg R9A07G044_SSI0_RST_M2_REG>;
 			dmas = <&dmac 0x2655>, <&dmac 0x2656>;
 			dma-names = "tx", "rx";
-			full-duplex;
 			power-domains = <&cpg>;
 			#sound-dai-cells = <0>;
 			status = "disabled";
@@ -281,7 +280,6 @@
 			resets = <&cpg R9A07G044_SSI1_RST_M2_REG>;
 			dmas = <&dmac 0x2659>, <&dmac 0x265a>;
 			dma-names = "tx", "rx";
-			full-duplex;
 			power-domains = <&cpg>;
 			#sound-dai-cells = <0>;
 			status = "disabled";
@@ -850,11 +848,10 @@
 			};
 		};
 
-		dsi: dsi@10860000 {
+		dsi: dsi@10850000 {
 			compatible = "renesas,r9a07g044-mipi-dsi",
 				     "renesas,rzg2l-mipi-dsi";
-			reg =	<0 0x10860000 0 0x10000>, /* LINK */
-				<0 0x10850000 0 0x10000>; /* DPHY */
+			reg = <0 0x10850000 0 0x20000>;
 			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
@@ -885,7 +882,7 @@
 				port@0 {
 					reg = <0>;
 					dsi0_in: endpoint {
-						remote-endpoint = <&du_out_dsi0>;
+						remote-endpoint = <&du_out_dsi>;
 					};
 				};
 
@@ -1161,15 +1158,13 @@
 
 				port@0 {
 					reg = <0>;
-					du_out_rgb: endpoint {
+					du_out_dsi: endpoint {
+						remote-endpoint = <&dsi0_in>;
 					};
 				};
 
 				port@1 {
 					reg = <1>;
-					du_out_dsi0: endpoint {
-						remote-endpoint = <&dsi0_in>;
-					};
 				};
 			};
 		};
