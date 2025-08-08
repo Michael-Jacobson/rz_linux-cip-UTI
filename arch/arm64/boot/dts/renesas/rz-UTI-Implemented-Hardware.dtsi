@@ -527,6 +527,26 @@
 	        panel-height-mm = <121>;
 	        //backlight = <&lcd_bl>; DO NOT SET THIS, the panel driver breaks PWM backlight
 	        status = "okay";
+
+	        display-timings { //kernel
+
+		        panel7_1024x600_kernel: timings {
+			        hback-porch     = <88>;
+			        hfront-porch    = <40>;
+			        hactive         = <1024>;
+			        hsync-len       = <48>;
+			        vback-porch     = <32>;
+			        vfront-porch    = <13>;
+			        vactive         = <600>;
+			        vsync-len       = <3>;
+			        clock-frequency = <58000000>;
+			        vsync-active    = <0>;
+			        hsync-active    = <0>;
+			        de-active       = <0>;
+			        pixelclk-active = <0>;
+		        };
+
+	        };
 	        
 	        ports {
 		        #address-cells = <1>;
