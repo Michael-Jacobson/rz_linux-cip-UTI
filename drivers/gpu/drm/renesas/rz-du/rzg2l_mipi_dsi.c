@@ -228,7 +228,7 @@ static int rzg2l_mipi_dsi_dphy_init(struct rzg2l_mipi_dsi *dsi,
 	dphyctrl0 |= DSIDPHYCTRL0_EN_LDO1200;
 	rzg2l_mipi_dsi_phy_write(dsi, DSIDPHYCTRL0, dphyctrl0);
 	usleep_range(10, 20);
-
+#if 0
 	dphytim0 = DSIDPHYTIM0_TCLK_MISS(0) |
 		   DSIDPHYTIM0_T_INIT(dphy_timings->t_init);
 	dphytim1 = DSIDPHYTIM1_THS_PREPARE(dphy_timings->ths_prepare) |
@@ -243,6 +243,40 @@ static int rzg2l_mipi_dsi_dphy_init(struct rzg2l_mipi_dsi *dsi,
 		   DSIDPHYTIM3_THS_EXIT(dphy_timings->ths_exit) |
 		   DSIDPHYTIM3_THS_TRAIL(dphy_timings->ths_trail) |
 		   DSIDPHYTIM3_THS_ZERO(dphy_timings->ths_zero);
+#endif
+
+#if 1
+        dphytim0 = DSIDPHYTIM0_TCLK_MISS(1) |
+		   DSIDPHYTIM0_T_INIT(79801);
+	dphytim1 = DSIDPHYTIM1_THS_PREPARE(9) |
+		   DSIDPHYTIM1_TCLK_PREPARE(8) |
+		   DSIDPHYTIM1_THS_SETTLE(9) |
+		   DSIDPHYTIM1_TCLK_SETTLE(9);
+	dphytim2 = DSIDPHYTIM2_TCLK_TRAIL(7) |
+		   DSIDPHYTIM2_TCLK_POST(35) |
+		   DSIDPHYTIM2_TCLK_PRE(4) |
+		   DSIDPHYTIM2_TCLK_ZERO(33);
+	dphytim3 = DSIDPHYTIM3_TLPX(6) |
+		   DSIDPHYTIM3_THS_EXIT(13) |
+		   DSIDPHYTIM3_THS_TRAIL(9) |
+		   DSIDPHYTIM3_THS_ZERO(16);
+#else
+	dphytim0 = DSIDPHYTIM0_TCLK_MISS(1) |
+		   DSIDPHYTIM0_T_INIT(79081);
+	dphytim1 = DSIDPHYTIM1_THS_PREPARE(12) |
+		   DSIDPHYTIM1_TCLK_PREPARE(8) |
+		   DSIDPHYTIM1_THS_SETTLE(9) |
+		   DSIDPHYTIM1_TCLK_SETTLE(9);
+	dphytim2 = DSIDPHYTIM2_TCLK_TRAIL(10) |
+		   DSIDPHYTIM2_TCLK_POST(94) |
+		   DSIDPHYTIM2_TCLK_PRE(13) |
+		   DSIDPHYTIM2_TCLK_ZERO(33);
+	dphytim3 = DSIDPHYTIM3_TLPX(6) |
+		   DSIDPHYTIM3_THS_EXIT(13) |
+		   DSIDPHYTIM3_THS_TRAIL(17) |
+		   DSIDPHYTIM3_THS_ZERO(23);
+#endif
+
 
 	rzg2l_mipi_dsi_phy_write(dsi, DSIDPHYTIM0, dphytim0);
 	rzg2l_mipi_dsi_phy_write(dsi, DSIDPHYTIM1, dphytim1);
