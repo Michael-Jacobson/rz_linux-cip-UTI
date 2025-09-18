@@ -17,6 +17,8 @@
 #include <sound/pcm_params.h>
 #include <sound/soc.h>
 
+
+
 /* REGISTER OFFSET */
 #define SSICR			0x000
 #define SSISR			0x004
@@ -109,7 +111,8 @@ struct rz_ssi_priv {
 	struct device *dev;
 	struct clk *sfr_clk;
 	struct clk *clk;
-
+	bool hw_params_applied;
+	struct snd_pcm_hw_params params;
 	phys_addr_t phys;
 	int irq_int;
 	int irq_tx;
@@ -127,6 +130,17 @@ struct rz_ssi_priv {
 	 */
 	struct rz_ssi_stream playback;
 	struct rz_ssi_stream capture;
+
+  /* Duplex coordination state */
+	struct {
+		unsigned int rate;
+	        snd_pcm_format_t fmt;
+	        unsigned int channels;
+	        bool have_params;
+	        bool tx_active;
+	        bool rx_active;
+	        bool one_triggered;
+	} dup;
 
 	/* clock */
 	unsigned long audio_mck;
@@ -356,22 +370,28 @@ static void rz_ssi_set_idle(struct rz_ssi_priv *ssi)
 			     SSIFCR_TFRST | SSIFCR_RFRST);
 }
 
+
+
+
 static int rz_ssi_start(struct rz_ssi_priv *ssi, struct rz_ssi_stream *strm)
 {
 	bool is_play = rz_ssi_stream_is_play(strm->substream);
 	bool is_full_duplex;
 	u32 ssicr, ssifcr;
+	static  bool one_triggered =false;
 
-	is_full_duplex = rz_ssi_is_stream_running(&ssi->playback) ||
-		rz_ssi_is_stream_running(&ssi->capture);
+         is_full_duplex= ssi->dup.tx_active && ssi->dup.rx_active;
+
 	ssicr = rz_ssi_reg_readl(ssi, SSICR);
 	ssifcr = rz_ssi_reg_readl(ssi, SSIFCR);
 	if (!is_full_duplex) {
 		ssifcr &= ~0xF;
 	} else {
+	     if (one_triggered) {
 		rz_ssi_reg_mask_setl(ssi, SSICR, SSICR_TEN | SSICR_REN, 0);
 		rz_ssi_set_idle(ssi);
 		ssifcr &= ~SSIFCR_FIFO_RST;
+		}
 	}
 
 	/* FIFO interrupt thresholds */
@@ -405,13 +425,19 @@ static int rz_ssi_start(struct rz_ssi_priv *ssi, struct rz_ssi_stream *strm)
 
 	strm->running = 1;
 	if (is_full_duplex) {
-		/* TEN and REN must be set at the same time for full duplex */
-		rz_ssi_reg_writel(ssi, SSICR, ssicr & ~(SSICR_TEN | SSICR_REN));
-		ssicr |= SSICR_TEN | SSICR_REN;
-	} else
+		if (one_triggered) {
+			/* TEN and REN must be set at the same time for full duplex */
+			rz_ssi_reg_writel(ssi, SSICR, ssicr & ~(SSICR_TEN | SSICR_REN));
+			ssicr |= SSICR_TEN | SSICR_REN;
+			rz_ssi_reg_writel(ssi, SSICR, ssicr);
+			one_triggered = false;
+		}else{
+			one_triggered = true;
+		}
+	} else {
 		ssicr |= is_play ? SSICR_TEN : SSICR_REN;
-
-	rz_ssi_reg_writel(ssi, SSICR, ssicr);
+		rz_ssi_reg_writel(ssi, SSICR, ssicr);
+	}
 
 	return 0;
 }
@@ -419,7 +445,6 @@ static int rz_ssi_start(struct rz_ssi_priv *ssi, struct rz_ssi_stream *strm)
 static int rz_ssi_swreset(struct rz_ssi_priv *ssi)
 {
 	u32 tmp;
-
 	rz_ssi_reg_mask_setl(ssi, SSIFCR, SSIFCR_SSIRST, SSIFCR_SSIRST);
 	rz_ssi_reg_mask_setl(ssi, SSIFCR, SSIFCR_SSIRST, 0);
 	return readl_poll_timeout_atomic(ssi->base + SSIFCR, tmp, !(tmp & SSIFCR_SSIRST), 1, 5);
@@ -869,11 +894,27 @@ static void rz_ssi_streams_suspend(struct rz_ssi_priv *ssi)
 	ssi->capture.dma_buffer_pos = 0;
 }
 
+
+static int rz_ssi_hw_free(struct snd_pcm_substream *substream,
+			   struct snd_soc_dai *dai)
+{
+	struct rz_ssi_priv *ssi = snd_soc_dai_get_drvdata(dai);
+
+	ssi->hw_params_applied = false;
+	memset(&ssi->params, 0, sizeof(ssi->params));
+
+	if (!ssi->dup.tx_active && !ssi->dup.rx_active)
+		memset(&ssi->dup, 0, sizeof(ssi->dup));
+	return 0;
+}
+
+
 static int rz_ssi_dai_trigger(struct snd_pcm_substream *substream, int cmd,
 			      struct snd_soc_dai *dai)
 {
 	struct rz_ssi_priv *ssi = snd_soc_dai_get_drvdata(dai);
 	struct rz_ssi_stream *strm = rz_ssi_stream_get(ssi, substream);
+	bool is_playback = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
 	int ret = 0, i, num_transfer = 1;
 
 	switch (cmd) {
@@ -934,6 +975,12 @@ static int rz_ssi_dai_trigger(struct snd_pcm_substream *substream, int cmd,
 		break;
 
 	case SNDRV_PCM_TRIGGER_STOP:
+		if (is_playback) {
+			ssi->dup.tx_active = false;
+
+	        } else {
+			ssi->dup.rx_active = false;
+		}
 		rz_ssi_stop(ssi, strm);
 		rz_ssi_stream_quit(ssi, strm);
 		break;
@@ -994,16 +1041,45 @@ static int rz_ssi_dai_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
 	return 0;
 }
 
+static int rz_ssi_startup(struct snd_pcm_substream *substream,
+			   struct snd_soc_dai *dai)
+{
+	struct rz_ssi_priv *ssi = snd_soc_dai_get_drvdata(dai);
+	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK){
+		ssi->dup.tx_active = true;
+	}
+	else{
+		ssi->dup.rx_active = true;
+	}
+
+	return 0;
+}
+
+static void rz_ssi_shutdown(struct snd_pcm_substream *substream,
+			     struct snd_soc_dai *dai)
+{
+	struct rz_ssi_priv *ssi = snd_soc_dai_get_drvdata(dai);
+
+	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+		ssi->dup.tx_active = false;
+	else
+		ssi->dup.rx_active = false;
+}
+
+
 static bool rz_ssi_is_valid_hw_params(struct rz_ssi_priv *ssi, unsigned int rate,
 				      unsigned int channels,
 				      unsigned int sample_width,
 				      unsigned int sample_bits)
 {
+
 	if (ssi->hw_params_cache.rate != rate ||
 	    ssi->hw_params_cache.channels != channels ||
 	    ssi->hw_params_cache.sample_width != sample_width ||
-	    ssi->hw_params_cache.sample_bits != sample_bits)
+	    ssi->hw_params_cache.sample_bits != sample_bits){
+
 		return false;
+	}
 
 	return true;
 }
@@ -1044,16 +1120,18 @@ static int rz_ssi_dai_hw_params(struct snd_pcm_substream *substream,
 		return -EINVAL;
 	}
 
-	if (rz_ssi_is_stream_running(&ssi->playback) ||
-	    rz_ssi_is_stream_running(&ssi->capture)) {
+	if (ssi->hw_params_applied) {
 		if (rz_ssi_is_valid_hw_params(ssi, rate, channels,
-					      strm->sample_width, sample_bits))
+					      strm->sample_width, sample_bits)){
+			//dev_info(ssi->dev,"------Full duplex with same HW params. Already configured, skip setup\n");
 			return 0;
-
-		dev_err(ssi->dev, "Full duplex needs same HW params\n");
+		}
+		dev_err(ssi->dev, "------Full duplex needs same HW params\n");
 		return -EINVAL;
 	}
-
+	// Cache and mark as applied
+	ssi->params = *params;
+	ssi->hw_params_applied = true;
 	rz_ssi_cache_hw_params(ssi, rate, channels, strm->sample_width,
 			       sample_bits);
 
@@ -1064,11 +1142,20 @@ static int rz_ssi_dai_hw_params(struct snd_pcm_substream *substream,
 	return rz_ssi_clk_setup(ssi, rate, channels);
 }
 
+
+
+
+
 static const struct snd_soc_dai_ops rz_ssi_dai_ops = {
-	.trigger	= rz_ssi_dai_trigger,
-	.set_fmt	= rz_ssi_dai_set_fmt,
-	.hw_params	= rz_ssi_dai_hw_params,
+	.startup = rz_ssi_startup,
+	.shutdown = rz_ssi_shutdown,
+
+	.hw_params = rz_ssi_dai_hw_params,
+	.hw_free = rz_ssi_hw_free,
+	.set_fmt = rz_ssi_dai_set_fmt,
+	.trigger = rz_ssi_dai_trigger,
 };
+
 
 static const struct snd_pcm_hardware rz_ssi_pcm_hardware = {
 	.info			= SNDRV_PCM_INFO_INTERLEAVED	|
@@ -1105,12 +1192,15 @@ static snd_pcm_uframes_t rz_ssi_pcm_pointer(struct snd_soc_component *component,
 	return strm->buffer_pos;
 }
 
+
+
 static int rz_ssi_pcm_new(struct snd_soc_component *component,
 			  struct snd_soc_pcm_runtime *rtd)
 {
 	snd_pcm_set_managed_buffer_all(rtd->pcm, SNDRV_DMA_TYPE_DEV,
 				       rtd->card->snd_card->dev,
 				       PREALLOC_BUFFER, PREALLOC_BUFFER_MAX);
+
 	return 0;
 }
 
@@ -1278,6 +1368,7 @@ static int rz_ssi_probe(struct platform_device *pdev)
 		goto err_release_dma_chs;
 	}
 
+        memset(&ssi->dup, 0, sizeof(ssi->dup));
 	return 0;
 
 err_release_dma_chs:
