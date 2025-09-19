@@ -317,7 +317,6 @@
 		simple-audio-card,format = "i2s";
 		simple-audio-card,bitclock-master = <&cpu_dai>;
 		simple-audio-card,frame-master = <&cpu_dai>;
-		simple-audio-card,mclk-fs = <8>;
 
 		simple-audio-card,widgets = 
 			"Speaker", "POTS Line Out",
@@ -567,9 +566,7 @@
 &mtu3 {
 	pinctrl-0 = <&mtu3_pins>;
 	pinctrl-names = "default";
-	#pwm-cells = <2>;
-	
-	//pwm_mode1 = <2 0>; //MTIOC2A
+	#pwm-cells = <2>;	
 	
 	status = "okay";
 	
