@@ -167,24 +167,6 @@
 	        wifi_bt_module_power {
 	                pinmux = <RZG2L_PORT_PINMUX(46, 2, 0)>;
 	        };
-	};
-	
-	Keyboard_pins: Keyboard {
-	        cols {
-	                pinmux = <RZG2L_PORT_PINMUX(12, 1, 0)>,
-                                 <RZG2L_PORT_PINMUX(13, 0, 0)>,
-                                 <RZG2L_PORT_PINMUX(13, 1, 0)>,
-	                         <RZG2L_PORT_PINMUX(13, 2, 0)>;
-	        };
-	        
-	        rows {
-	                pinmux = <RZG2L_PORT_PINMUX(0, 0, 0)>,
-	                         <RZG2L_PORT_PINMUX(0, 1, 0)>,
-	                         <RZG2L_PORT_PINMUX(1, 0, 0)>,
-	                         <RZG2L_PORT_PINMUX(1, 1, 0)>,
-	                         <RZG2L_PORT_PINMUX(2, 1, 0)>;
-	                         input-enable;
-	        };
-	};
+	};	
 };
 

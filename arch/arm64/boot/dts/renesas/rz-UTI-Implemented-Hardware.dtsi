@@ -89,7 +89,7 @@
 		default-brightness-level = <9>;
 		power-supply = <&reg_3p3v>;
 	};
-	
+	/*
 	gpio_keys_polled { //this is for input GPIOs only
 		compatible = "gpio-keys-polled";
 		#address-cells = <1>;
@@ -139,15 +139,15 @@
 			gpios = <&pinctrl RZG2L_GPIO(48, 2) GPIO_ACTIVE_HIGH>;
 		};
 	};
-		
-	/*
+	*/	
+	
 	matrix_keypad: matrix_keypad0 {
 		compatible = "gpio-matrix-keypad";  
 		debounce-delay-ms = <5>;
 		col-scan-delay-us = <2>;
-		//interrupt-parent = <&pinctrl>;
-		interrupt-parent = <&intc_ex>;
-		//pinctrl-names = "default";
+		interrupt-parent = <&pinctrl>;
+		//interrupt-parent = <&intc_ex>;
+		pinctrl-names = "default";
 		
 		pinctrl-0 = <&keyboard_pins>;
 
@@ -190,7 +190,7 @@
 				0x040200BB      // DTMF# /
 				0x04030097>;      // MUTE /
 	};
-	*/
+	
 	
 	leds {
 	       	compatible = "gpio-leds"; 
