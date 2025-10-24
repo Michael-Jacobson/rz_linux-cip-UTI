@@ -169,7 +169,7 @@
 	        };
 	};
 	
-	Keyboard_pins: Keyboard {
+	/*Keyboard_pins: Keyboard {
 	        cols {
 	                pinmux = <RZG2L_PORT_PINMUX(12, 1, 0)>,
                                  <RZG2L_PORT_PINMUX(13, 0, 0)>,
@@ -185,6 +185,6 @@
 	                         <RZG2L_PORT_PINMUX(2, 1, 0)>;
 	                         input-enable;
 	        };
-	};
+	};*/
 };
 
