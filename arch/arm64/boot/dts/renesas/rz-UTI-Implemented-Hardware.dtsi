@@ -145,8 +145,8 @@
 		compatible = "gpio-matrix-keypad";  
 		debounce-delay-ms = <5>;
 		col-scan-delay-us = <2>;
-		interrupt-parent = <&pinctrl>;
-		//interrupt-parent = <&intc_ex>;
+		//interrupt-parent = <&pinctrl>;
+		interrupt-parent = <&intc_ex>;
 		pinctrl-names = "default";
 		
 		//pinctrl-0 = <&Keyboard_pins>;
