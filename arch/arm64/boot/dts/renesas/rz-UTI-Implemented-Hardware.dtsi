@@ -31,7 +31,7 @@
 		regulator-name = "WLAN_EN";
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
-		gpio = <&pinctrl RZG2L_GPIO(46, 2) GPIO_ACTIVE_HIGH>; // WiFi Wake 
+		//gpio = <&pinctrl RZG2L_GPIO(46, 2) GPIO_ACTIVE_HIGH>; // WiFi PD 
 		enable-active-high;
 		regulator-boot-on;
 		regulator-always-on;
@@ -40,8 +40,10 @@
 	wifi_pwrseq: wifi-pwrseq {
 		compatible = "mmc-pwrseq-simple";
 		pinctrl-names = "default";
-		reset-gpios = <&pinctrl RZG2L_GPIO(46, 1) GPIO_ACTIVE_LOW>; // WiFi reset 
-		post-power-on-delay-ms = <200>;
+		reset-gpios = <&pinctrl RZG2L_GPIO(46, 1) GPIO_ACTIVE_LOW>,
+		        <&pinctrl RZG2L_GPIO(46, 2) GPIO_ACTIVE_LOW>; // WiFi reset, WIFI PD
+		power-off-delay-us = <100000>;
+                post-power-on-delay-ms = <250>;
 	};
 	
 	bt_sco_codec: bt_sco_codec {
@@ -75,12 +77,6 @@
 		#clock-cells = <0>;
 		clock-frequency = <24000000>;
 	};
-	
-	/*lcd_bl: backlight {
-		compatible = "gpio-backlight";
-		gpios = <&pinctrl RZG2L_GPIO(9, 0) GPIO_ACTIVE_HIGH>;
-		default-on;
-	};*/
 	
         lcd_bl: backlight {
 		compatible = "pwm-backlight";
