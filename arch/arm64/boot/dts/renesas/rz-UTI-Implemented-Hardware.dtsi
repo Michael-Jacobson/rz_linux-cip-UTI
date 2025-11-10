@@ -42,7 +42,8 @@
 		pinctrl-names = "default";
 		reset-gpios = <&pinctrl RZG2L_GPIO(46, 1) GPIO_ACTIVE_LOW>,
 		              <&pinctrl RZG2L_GPIO(46, 2) GPIO_ACTIVE_LOW>; // WiFi reset 
-		post-power-on-delay-ms = <1000>;
+		power-off-delay-us = <100000>;
+		post-power-on-delay-ms = <250>;
 	};
 	
 	bt_sco_codec: bt_sco_codec {
